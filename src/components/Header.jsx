@@ -25,10 +25,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-[#e8e8e8]">
-      {/* Top Announcement */}
-      <div className="bg-black text-white py-1.5 px-4 text-center text-xs font-light tracking-widest">
-        FREE SHIPPING ON ORDERS ABOVE ₹999
-      </div>
+
 
       {/* Main Header */}
       <nav className="container-custom py-3 md:py-4">

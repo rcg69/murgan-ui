@@ -2,7 +2,7 @@
 import "../styles/Hero.css";
 export default function Hero() {
   return (
-    <section className="relative h-[90vh] w-full overflow-hidden bg-black">
+    <section className="relative w-full h-screen min-h-screen overflow-hidden bg-black flex items-center justify-center">
 
       {/* Background Video */}
       <video
@@ -11,6 +11,7 @@ export default function Hero() {
         muted
         loop
         playsInline
+        loading="lazy"
       >
         <source src="/hero-video.mp4" type="video/mp4" />
       </video>
@@ -19,11 +20,11 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black/20"></div>
 
       {/* FLOWING TEXT */}
-        <div className="hero-marquee-wrapper">
-  <div className="hero-marquee-text">
-    Elegant design crafted for modern living
-  </div>
-</div>
+      <div className="hero-marquee-wrapper">
+        <div className="hero-marquee-text">
+          Elegant design crafted for modern living
+        </div>
+      </div>
 
     </section>
   );

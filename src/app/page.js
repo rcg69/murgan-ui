@@ -41,7 +41,7 @@ export default function Home() {
       <Hero />
 
       {/* Collections Grid */}
-      <CollectionsGrid />
+   {/*    <CollectionsGrid /> */}
 
       {/* Featured Products Section */}
       {/* <section className="py-16 md:py-24 bg-white">

@@ -1,22 +1,26 @@
 .hero-marquee-wrapper {
   position: absolute;
-  bottom: 30%;
+  bottom: 5%;
   left: 0;
   width: 100%;
   z-index: 50;
   pointer-events: none;
-  /* ❌ NO overflow hidden here */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
 }
 
 .hero-marquee-text {
-  position: absolute;
+  position: relative;
   left: 0;
-
   white-space: nowrap;
 
-  font-size: clamp(4rem, 12vw, 12rem);
+  /* Fully responsive font size */
+  font-size: clamp(1.5rem, 8vw, 12rem);
   font-weight: 500;
   color: white;
+  letter-spacing: -0.02em;
 
   /* START OUTSIDE RIGHT */
   transform: translateX(120vw);
@@ -32,5 +36,46 @@
   }
   to {
     transform: translateX(-120%);
+  }
+}
+
+/* Tablet responsiveness */
+@media (max-width: 768px) {
+  .hero-marquee-wrapper {
+    bottom: 5%;
+    padding: 0 0.5rem;
+  }
+
+  .hero-marquee-text {
+    animation: hero-marquee-rtl 18s linear infinite;
+    font-size: clamp(1.25rem, 7vw, 8rem);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .hero-marquee-wrapper {
+    bottom: 5%;
+    padding: 0 0.25rem;
+    width: 100vw;
+    overflow: hidden;
+  }
+
+  .hero-marquee-text {
+    animation: hero-marquee-rtl 15s linear infinite;
+    font-size: clamp(1rem, 6vw, 4rem);
+    text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Small phones */
+@media (max-width: 320px) {
+  .hero-marquee-wrapper {
+    bottom: 5%;
+  }
+
+  .hero-marquee-text {
+    font-size: clamp(0.875rem, 5vw, 2rem);
+    animation: hero-marquee-rtl 12s linear infinite;
   }
 }
