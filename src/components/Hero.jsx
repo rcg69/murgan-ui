@@ -13,7 +13,7 @@ export default function Hero() {
         playsInline
         loading="lazy"
       >
-        <source src="/hero-video.mp4" type="video/mp4" />
+        <source src="/hero.mp4" type="video/mp4" />
       </video>
 
       {/* Overlay (optional, subtle) */}
