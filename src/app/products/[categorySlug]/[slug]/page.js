@@ -4,6 +4,11 @@ import { extractIdFromSlug } from '@/utils/slugHelpers';
 import { getProductsFromStorage } from '@/utils/storageHelpers';
 import ProductDetailsContent from '@/components/ProductDetailsContent';
 
+// Required for static export - return empty to disable this page
+export async function generateStaticParams() {
+  return [];
+}
+
 export default function ProductDetailsPage({ params: paramsPromise }) {
   const params = React.use(paramsPromise);
 
