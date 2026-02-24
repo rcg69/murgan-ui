@@ -1,0 +1,36 @@
+.hero-marquee-wrapper {
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  pointer-events: none;
+  /* ❌ NO overflow hidden here */
+}
+
+.hero-marquee-text {
+  position: absolute;
+  left: 0;
+
+  white-space: nowrap;
+
+  font-size: clamp(4rem, 12vw, 12rem);
+  font-weight: 500;
+  color: white;
+
+  /* START OUTSIDE RIGHT */
+  transform: translateX(120vw);
+  animation: hero-marquee-rtl 22s linear infinite;
+
+  text-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* RIGHT ➜ LEFT */
+@keyframes hero-marquee-rtl {
+  from {
+    transform: translateX(120vw);
+  }
+  to {
+    transform: translateX(-120%);
+  }
+}

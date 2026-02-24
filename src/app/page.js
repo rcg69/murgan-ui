@@ -6,6 +6,7 @@ import StudioSection from '@/components/StudioSection';
 import PerspectivesSection from '@/components/PerspectivesSection';
 import { dressProducts } from '@/data/products';
 import { getProductsFromStorage } from '@/utils/storageHelpers';
+import Hero from '@/components/Hero';
 
 // SEO Metadata for Home Page
 export const metadata = {
@@ -35,7 +36,8 @@ export default function Home() {
   return (
     <>
       {/* Hero Carousel */}
-      <FeaturedCarousel />
+      {/* <FeaturedCarousel /> */}
+      <Hero />
 
       {/* Collections Grid */}
       <CollectionsGrid />

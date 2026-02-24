@@ -206,6 +206,43 @@ li {
   padding: 0 1.5rem;
 }
 
+.hero-marquee-wrapper {
+  position: absolute;
+  bottom: 20%;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hero-marquee-text {
+  position: absolute;
+
+  /* BIG TEXT */
+  font-size: clamp(4rem, 12vw, 12rem);
+  font-weight: 500;
+  color: white;
+
+  white-space: nowrap;
+
+  /* START COMPLETELY OUTSIDE LEFT */
+  transform: translateX(-120%);
+  animation: hero-marquee 22s linear infinite;
+
+  text-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* FULL LEFT ➜ RIGHT FLOW */
+@keyframes hero-marquee {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(120vw);
+  }
+}
+
 @media (max-width: 768px) {
   h1 { font-size: 2rem; }
   h2 { font-size: 1.75rem; }
