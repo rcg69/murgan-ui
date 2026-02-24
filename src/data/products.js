@@ -1,6 +1,59 @@
 // Product data - Empty array ready for backend API integration
 // Once backend is ready, replace this with API calls
-export const dressProducts = [];
+export const dressProducts = [
+  {
+    id: 1,
+    name: 'Elegant Black Evening Dress',
+    price: 2499,
+    originalPrice: 4999,
+    category: 'Evening Dresses',
+    categorySlug: 'evening-dresses',
+    slug: 'elegant-black-evening-dress-1',
+    image: 'https://via.placeholder.com/400x500?text=Black+Evening+Dress',
+    description: 'A stunning black evening dress perfect for formal occasions',
+    rating: 4.5,
+    reviews: 120,
+  },
+  {
+    id: 2,
+    name: 'Casual Summer Floral Dress',
+    price: 1299,
+    originalPrice: 2499,
+    category: 'Casual Dresses',
+    categorySlug: 'casual-dresses',
+    slug: 'casual-summer-floral-dress-2',
+    image: 'https://via.placeholder.com/400x500?text=Floral+Dress',
+    description: 'Lightweight and colorful casual dress for summer',
+    rating: 4.2,
+    reviews: 85,
+  },
+  {
+    id: 3,
+    name: 'Professional Office Dress',
+    price: 1999,
+    originalPrice: 3999,
+    category: 'Office Dresses',
+    categorySlug: 'office-dresses',
+    slug: 'professional-office-dress-3',
+    image: 'https://via.placeholder.com/400x500?text=Office+Dress',
+    description: 'Perfect for office wear - professional and elegant',
+    rating: 4.8,
+    reviews: 150,
+  },
+  {
+    id: 4,
+    name: 'Party Night Sequin Dress',
+    price: 3499,
+    originalPrice: 6999,
+    category: 'Party Dresses',
+    categorySlug: 'party-dresses',
+    slug: 'party-night-sequin-dress-4',
+    image: 'https://via.placeholder.com/400x500?text=Sequin+Dress',
+    description: 'Glamorous sequin dress for party nights',
+    rating: 4.6,
+    reviews: 95,
+  },
+];
 
 // Categories
 export const categories = [
