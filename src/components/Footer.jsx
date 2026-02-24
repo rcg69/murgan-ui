@@ -83,7 +83,7 @@ export default function Footer() {
                 <a 
                   key={idx}
                   href={href} 
-                  className="w-10 h-10 rounded-xl bg-white/90 border border-black/10 flex items-center justify-center text-gray-600 hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm hover:shadow-lg"
+                  className="w-10 h-10 rounded-xl bg-white/90 border border-black/10 flex items-center justify-center text-gray-600 hover:text-black hover:scale-125 transition-all duration-300 shadow-sm hover:shadow-lg"
                 >
                   <Icon size={18} />
                 </a>
