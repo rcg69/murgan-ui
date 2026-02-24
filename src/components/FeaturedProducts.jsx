@@ -1,0 +1,46 @@
+import "../styles/FeaturedProducts.css";
+
+export default function FeaturedProducts() {
+  return (
+    <section className="featured-section">
+      {/* Section Header */}
+      <div className="featured-header">
+        <h2>Featured Collection</h2>
+        <p>Curated editorial picks for the season</p>
+      </div>
+
+      {/* Editorial Grid */}
+      <div className="featured-grid">
+        <div className="featured-item large">
+          <img src="/product1.jpg" alt="Product" />
+          <span>THE ART OF STILLNESS</span>
+        </div>
+
+        <div className="featured-item large">
+          <img src="/product2.jpg" alt="Product" />
+          <span>MODERN FORM</span>
+        </div>
+
+        <div className="featured-item">
+          <img src="/product3.jpg" alt="Product" />
+          <span>ESSENTIAL SILHOUETTE</span>
+        </div>
+
+        <div className="featured-item">
+          <img src="/product4.jpg" alt="Product" />
+          <span>TIMELESS WEAR</span>
+        </div>
+
+        <div className="featured-item">
+          <img src="/product5.jpg" alt="Product" />
+          <span>MINIMAL STATEMENT</span>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div className="featured-cta">
+        <button>View Full Collection</button>
+      </div>
+    </section>
+  );
+}

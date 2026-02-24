@@ -7,6 +7,7 @@ import PerspectivesSection from '@/components/PerspectivesSection';
 import { dressProducts } from '@/data/products';
 import { getProductsFromStorage } from '@/utils/storageHelpers';
 import Hero from '@/components/Hero';
+import FeaturedProducts from '@/components/FeaturedProducts';
 
 // SEO Metadata for Home Page
 export const metadata = {
@@ -43,7 +44,7 @@ export default function Home() {
       <CollectionsGrid />
 
       {/* Featured Products Section */}
-      <section className="py-16 md:py-24 bg-white">
+      {/* <section className="py-16 md:py-24 bg-white">
         <div className="container-custom">
           <div className="mb-10 md:mb-16">
             <h2 className="text-2xl md:text-3xl font-light mb-2">Featured Products</h2>
@@ -56,7 +57,8 @@ export default function Home() {
             </a>
           </div>
         </div>
-      </section>
+      </section> */}
+      <FeaturedProducts/>
 
       {/* Studio/Configuration Section */}
       <StudioSection />
