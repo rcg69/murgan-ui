@@ -1,0 +1,76 @@
+.loaderContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: 9999;
+  animation: fadeOut 0.5s ease-in-out 1.5s forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.spinner {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.spinnerCircle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #fff;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.spinnerCircle:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.spinnerCircle:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.loaderText {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  margin: 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
