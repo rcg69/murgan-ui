@@ -14,6 +14,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+import "./header.css";
+
 function Header1() {
     const navigationItems = [
         {
@@ -143,14 +145,9 @@ function Header1() {
                 </div>
                 <div className="flex lg:justify-center">
                     <Link href="/">
-                        <Image 
-                            src="/logo.png" 
-                            alt="Murgan Logo" 
-                            width={isScrolled ? 32 : 48}
-                            height={isScrolled ? 32 : 48}
-                            className="transition-all duration-300"
-                            priority
-                        />
+                        <span className={`font-black text-black transition-all duration-300 ${isScrolled ? 'text-lg' : 'text-2xl'}`}>
+                            MURGAN
+                        </span>
                     </Link>
                 </div>
                 <div className="flex justify-end w-full gap-4">

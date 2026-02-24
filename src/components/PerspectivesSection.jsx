@@ -76,18 +76,18 @@ import "../styles/Perspectives.css";
 
 export default function PerspectivesSection() {
   const items = [
-    { id: 1, image: "/p1.jpg", title: "Cristian D’Or" },
-    { id: 2, image: "/p2.jpg", title: "Louise Tehofri" },
-    { id: 3, image: "/p3.jpg", title: "Mathilde Nansen" },
-    { id: 4, image: "/p4.jpg", title: "Gökçe Tercioglu" },
+    { id: 1, image: "/saree2.png", title: "Cristian D'Or" },
+    { id: 2, image: "/saree2.png", title: "Louise Tehofri" },
+    { id: 3, image: "/saree2.png", title: "Mathilde Nansen" },
+    { id: 4, image: "/saree2.png", title: "Gökçe Tercioglu" },
   ];
 
   return (
     <section className="perspectives-section">
       {/* Heading */}
       <div className="perspectives-header">
-        <h2>Perspectives</h2>
-        <p>A visual journal from our universe</p>
+        <h2>Popular Products</h2>
+     {/*        <p>A visual journal from our universe</p> */}
       </div>
 
       {/* FLOWING GRID */}

@@ -1,89 +1,158 @@
 'use client';
 
-import React from 'react';
+import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon, Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
+import './Footer.css';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
+  const footerLinks = [
+    {
+      title: "Shop",
+      links: [
+        { href: "/products", label: "All Collections" },
+        { href: "/products?category=formal", label: "Formal Wear" },
+        { href: "/products?category=casual", label: "Casual Wear" },
+        { href: "/products?category=summer", label: "Summer Collection" },
+        { href: "/products?category=party", label: "Party Dresses" },
+        { href: "/", label: "New Arrivals" },
+      ],
+    },
+    {
+      title: "Support",
+      links: [
+        { href: "/", label: "Contact Us" },
+        { href: "/", label: "FAQs" },
+        { href: "/", label: "Shipping & Returns" },
+        { href: "/", label: "Size Guide" },
+        { href: "/", label: "Track Order" },
+        { href: "/", label: "Bulk Orders" },
+      ],
+    },
+    {
+      title: "About",
+      links: [
+        { href: "/", label: "Our Story" },
+        { href: "/", label: "Sustainability" },
+        { href: "/", label: "Press" },
+        { href: "/", label: "Careers" },
+        { href: "/", label: "Blog" },
+        { href: "/", label: "Gift Cards" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { href: "/", label: "Terms & Conditions" },
+        { href: "/", label: "Privacy Policy" },
+        { href: "/", label: "Cookie Policy" },
+        { href: "/", label: "Refund Policy" },
+        { href: "/", label: "Accessibility" },
+        { href: "/", label: "Contact" },
+      ],
+    },
+  ];
+
+  const socialLinks = [
+    { icon: FacebookIcon, href: "#" },
+    { icon: InstagramIcon, href: "#" },
+    { icon: TwitterIcon, href: "#" },
+    { icon: LinkedinIcon, href: "#" },
+  ];
+
   return (
-    <footer className="bg-white border-t border-[#e8e8e8] mt-16 md:mt-24">
-      <div className="container-custom py-12 md:py-16">
-        {/* Newsletter Section */}
-        <div className="mb-12 md:mb-16 pb-10 md:pb-12 border-b border-[#e8e8e8]">
-          <h3 className="text-xl md:text-2xl font-light mb-3">Stay Updated</h3>
-          <p className="text-gray-600 text-sm md:text-base font-light mb-5 md:mb-6 leading-relaxed">Subscribe to receive updates on new collections and exclusive offers.</p>
-          <form className="flex max-w-sm gap-3">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-3 py-2 border-b border-black outline-none bg-transparent text-sm placeholder-gray-400 font-light"
-            />
-            <button type="submit" className="btn-primary-pedestal">
-              Subscribe
-            </button>
-          </form>
-        </div>
-
-        {/* Footer Links Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10 md:mb-12">
-          {/* Collections */}
-          <div>
-            <h6 className="text-xs font-semibold tracking-widest mb-4 md:mb-5 uppercase text-black">Collections</h6>
-            <ul className="space-y-2 md:space-y-2.5">
-              <li><Link href="/products" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">All Dresses</Link></li>
-              <li><Link href="/products?category=formal" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Formal Wear</Link></li>
-              <li><Link href="/products?category=casual" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Casual Wear</Link></li>
-              <li><Link href="/products?category=summer" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Summer Collection</Link></li>
-            </ul>
-          </div>
-
-          {/* Customer Service */}
-          <div>
-            <h6 className="text-xs font-semibold tracking-widest mb-4 md:mb-5 uppercase text-black">Customer Service</h6>
-            <ul className="space-y-2 md:space-y-2.5">
-              <li><Link href="/" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Contact Us</Link></li>
-              <li><Link href="/" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">FAQ</Link></li>
-              <li><Link href="/" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Shipping & Returns</Link></li>
-              <li><Link href="/" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Size Guide</Link></li>
-            </ul>
-          </div>
-
-          {/* About */}
-          <div>
-            <h6 className="text-xs font-semibold tracking-widest mb-4 md:mb-5 uppercase text-black">About</h6>
-            <ul className="space-y-2 md:space-y-2.5">
-              <li><Link href="/perspectives" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Our Story</Link></li>
-              <li><Link href="/" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Sustainability</Link></li>
-              <li><Link href="/" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Press</Link></li>
-              <li><Link href="/" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Careers</Link></li>
-            </ul>
-          </div>
-
-          {/* Follow */}
-          <div>
-            <h6 className="text-xs font-semibold tracking-widest mb-4 md:mb-5 uppercase text-black">Follow Us</h6>
-            <ul className="space-y-2 md:space-y-2.5 flex flex-col">
-              <li><a href="#" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Facebook</a></li>
-              <li><a href="#" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Instagram</a></li>
-              <li><a href="#" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">Pinterest</a></li>
-              <li><a href="#" className="text-xs md:text-sm text-gray-600 hover:text-black transition font-light">YouTube</a></li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom Section */}
-        <div className="border-t border-[#e8e8e8] pt-6 md:pt-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-xs text-gray-600 font-light">
-            <div>
-              <p className="font-light">&copy; {currentYear} MURGAN. All rights reserved.</p>
+    <footer className="bg-white pt-20 pb-[10px] border-t-2 border-black">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-12">
+          {/* Brand Section */}
+          <div className="group text-left">
+            <div className="flex items-center mb-8">
+{/*               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform duration-300 font-bold text-lg">
+                M
+              </div> */}
+              <span className="ml-3 text-xl font-bold tracking-tight bg-gradient-to-r from-black via-gray-800 to-gray-600 bg-clip-text text-transparent">
+                MURGAN
+              </span>
             </div>
-            <div className="flex gap-4 md:gap-6 md:justify-end text-xs">
-              <Link href="/" className="font-light hover:text-black transition">Privacy Policy</Link>
-              <Link href="/" className="font-light hover:text-black transition">Terms & Conditions</Link>
-              <Link href="/" className="font-light hover:text-black transition">Cookie Policy</Link>
+            <p className="text-gray-600 leading-relaxed mb-8 text-sm md:text-base">
+              Premium women's dresses crafted with elegance and quality. Discover timeless styles for every occasion.
+            </p>
+            <div className="flex space-x-4">
+              {socialLinks.map(({ icon: Icon, href }, idx) => (
+                <a 
+                  key={idx}
+                  href={href} 
+                  className="w-10 h-10 rounded-xl bg-white/90 border border-black/10 flex items-center justify-center text-gray-600 hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm hover:shadow-lg"
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
             </div>
           </div>
+
+          {/* Shop Section */}
+          <div className="text-left">
+            <h4 className="text-lg font-bold tracking-tight mb-6 text-black">
+              {footerLinks[0].title}
+            </h4>
+            <ul className="space-y-2">
+              {footerLinks[0].links.map((link, idx) => (
+                <li key={idx}>
+                  <Link href={link.href} className="text-gray-600 hover:text-black transition-colors duration-300 text-sm font-light">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Support Section */}
+          <div className="text-left">
+            <h4 className="text-lg font-bold tracking-tight mb-6 text-black">
+              {footerLinks[1].title}
+            </h4>
+            <ul className="space-y-2">
+              {footerLinks[1].links.map((link, idx) => (
+                <li key={idx}>
+                  <Link href={link.href} className="text-gray-600 hover:text-black transition-colors duration-300 text-sm font-light">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Section */}
+          <div className="text-left">
+            <h4 className="text-lg font-bold tracking-tight mb-6 text-black">
+              Contact
+            </h4>
+            <ul className="space-y-4">
+              <li className="text-gray-600 flex items-center text-sm">
+                <MapPin className="w-5 h-5 mr-2 text-gray-400" />
+                <span>New Delhi, India</span>
+              </li>
+              <li>
+                <a href="mailto:support@murgan.com" className="text-gray-600 hover:text-black transition-colors duration-300 flex items-center group text-sm">
+                  <Mail className="w-5 h-5 mr-2 text-gray-400" />
+                  support@murgan.com
+                </a>
+              </li>
+              <li>
+                <a href="tel:+919876543210" className="text-gray-600 hover:text-black transition-colors duration-300 flex items-center group text-sm">
+                  <Phone className="w-5 h-5 mr-2 text-gray-400" />
+                  +91 98765 43210
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-12 pt-8 border-t border-gray-200 text-center">
+          <p className="text-gray-600 text-sm font-light">
+            © {currentYear} MURGAN. All rights reserved. | Crafted with care. Designed for you.
+          </p>
         </div>
       </div>
     </footer>

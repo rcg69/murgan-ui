@@ -4,6 +4,7 @@ import CollectionsGrid from '@/components/CollectionsGrid';
 import ProductGrid from '@/components/ProductGrid';
 import StudioSection from '@/components/StudioSection';
 import PerspectivesSection from '@/components/PerspectivesSection';
+import WhyChooseMurgan from '@/components/WhyChooseMurgan';
 import { dressProducts } from '@/data/products';
 import { getProductsFromStorage } from '@/utils/storageHelpers';
 import Hero from '@/components/Hero';
@@ -35,10 +36,12 @@ export default function Home() {
   const loading = false;
 
   return (
-    <>
+    <div className="w-full overflow-hidden">
       {/* Hero Carousel */}
       {/* <FeaturedCarousel /> */}
-      <Hero />
+      <section className="w-full">
+        <Hero />
+      </section>
 
       {/* Collections Grid */}
    {/*    <CollectionsGrid /> */}
@@ -58,44 +61,20 @@ export default function Home() {
           </div>
         </div>
       </section> */}
-      <FeaturedProducts/>
-
-      {/* Studio/Configuration Section */}
-      <StudioSection />
-
-      {/* Benefits Section */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="container-custom">
-          <div className="mb-12 md:mb-16">
-            <h2 className="text-2xl md:text-3xl font-light">Why Choose MURGAN</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-6">
-            <div className="space-y-3">
-              <div className="text-2xl font-light text-black">✓</div>
-              <h3 className="text-base md:text-lg font-light">Premium Quality</h3>
-              <p className="text-gray-600 text-xs md:text-sm font-light leading-relaxed tracking-wide">Crafted with the finest materials and meticulous attention to detail</p>
-            </div>
-            <div className="space-y-3">
-              <div className="text-2xl font-light text-black">✓</div>
-              <h3 className="text-base md:text-lg font-light">Fast Shipping</h3>
-              <p className="text-gray-600 text-xs md:text-sm font-light leading-relaxed tracking-wide">Delivered to your door within 3-7 business days</p>
-            </div>
-            <div className="space-y-3">
-              <div className="text-2xl font-light text-black">✓</div>
-              <h3 className="text-base md:text-lg font-light">Easy Returns</h3>
-              <p className="text-gray-600 text-xs md:text-sm font-light leading-relaxed tracking-wide">30-day return policy for your peace of mind</p>
-            </div>
-            <div className="space-y-3">
-              <div className="text-2xl font-light text-black">✓</div>
-              <h3 className="text-base md:text-lg font-light">Expert Support</h3>
-              <p className="text-gray-600 text-xs md:text-sm font-light leading-relaxed tracking-wide">Dedicated team ready to assist you anytime</p>
-            </div>
-          </div>
-        </div>
+      <section className="w-full px-4 sm:px-6 lg:px-8">
+        <FeaturedProducts/>
       </section>
 
+      {/* Studio/Configuration Section */}
+    {/*   <StudioSection /> */}
+
+      {/* Benefits Section */}
+      {/* <WhyChooseMurgan /> */}
+
       {/* Perspectives/Stories Section */}
-      <PerspectivesSection />
-    </>
+      <section className="w-full px-4 sm:px-6 lg:px-8">
+        <PerspectivesSection />
+      </section>
+    </div>
   );
 }

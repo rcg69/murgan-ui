@@ -1,16 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap");
+
 .perspectives-section {
   padding: 120px 0;
   background: #fff;
   overflow: hidden;
+  margin-top: 0;
+  scroll-margin-top: 80px;
 }
 
 /* Header */
 .perspectives-header {
   padding: 0 6vw;
   margin-bottom: 60px;
+  position: relative;
+  z-index: 10;
 }
 
 .perspectives-header h2 {
+  font-family: "Playfair Display", serif;
   font-size: clamp(4rem, 10vw, 10rem);
   font-weight: 500;
   letter-spacing: -0.02em;
@@ -27,6 +34,8 @@
 .perspectives-viewport {
   width: 100%;
   overflow: hidden;
+  position: relative;
+  z-index: 5;
 }
 
 /* Track (THIS MOVES) */
@@ -34,7 +43,6 @@
   display: flex;
   gap: 40px;
   width: max-content;
-
   animation: perspectives-marquee 35s linear infinite;
 }
 
