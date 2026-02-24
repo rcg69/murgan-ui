@@ -1,7 +1,7 @@
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Loader from '@/components/Loader';
+import LoaderWrapper from '@/components/LoaderWrapper';
 import { CartProvider } from '@/context/CartContext';
 import { AdminProvider } from '@/context/AdminContext';
 
@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <Loader />
+        <LoaderWrapper />
         <AdminProvider>
           <CartProvider>
             <Header />
