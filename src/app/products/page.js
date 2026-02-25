@@ -34,13 +34,12 @@ export default function ProductsPage() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Products Header */}
-      <section className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 md:py-16">
-        <div className="container-custom">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Products</h1>
-          <p className="text-gray-300 text-lg">Discover our complete collection of premium women's dresses and fashion items</p>
-        </div>
-      </section>
+
+      {/* Products Title & Description */}
+{/*       <div className="container-custom mt-8 mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Products</h1>
+        <p className="text-gray-600 text-lg">Discover our complete collection of premium women's dresses and fashion items</p>
+      </div> */}
 
       {/* Products Section with Sidebar */}
       <section className="py-12 md:py-16 bg-white">
