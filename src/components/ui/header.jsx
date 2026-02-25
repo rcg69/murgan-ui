@@ -23,15 +23,11 @@ function Header1() {
             href: "/",
             description: "",
         },
+       
         {
-            title: "Product",
-            description: "Managing a small business today is already tough.",
-            items: [
-                { title: "Reports", href: "/reports" },
-                { title: "Statistics", href: "/statistics" },
-                { title: "Dashboards", href: "/dashboards" },
-                { title: "Recordings", href: "/recordings" },
-            ],
+            title: "Products",
+            href: "/products",
+            description: "",
         },
         {
             title: "Company",
@@ -164,12 +160,12 @@ function Header1() {
                                                                 {item.description}
                                                             </p>
                                                         </div>
-                                                        <Button
+{/*                                                         <Button
                                                             size="sm"
                                                             className="mt-10"
                                                         >
                                                             Book a call today
-                                                        </Button>
+                                                        </Button> */}
                                                     </div>
 
                                                     <div className="flex flex-col text-sm justify-end">

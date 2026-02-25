@@ -28,14 +28,14 @@ export default function ProductsPage() {
             <div></div>
 
             {/* Center: Title */}
-            <div className="text-center">
+{/*             <div className="text-center">
               <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
                 Top Products
               </h1>
               <p className="mt-2 text-gray-500 text-sm md:text-base">
                 Handpicked styles loved by our customers
               </p>
-            </div>
+            </div> */}
 
             {/* Right: Filter Button */}
             <div className="flex justify-end">
