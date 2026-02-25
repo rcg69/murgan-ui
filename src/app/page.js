@@ -36,12 +36,10 @@ export default function Home() {
   const loading = false;
 
   return (
-    <div className="w-full overflow-hidden">
+    <>
       {/* Hero Carousel */}
       {/* <FeaturedCarousel /> */}
-      <section className="w-full">
-        <Hero />
-      </section>
+      <Hero />
 
       {/* Collections Grid */}
    {/*    <CollectionsGrid /> */}
@@ -61,9 +59,7 @@ export default function Home() {
           </div>
         </div>
       </section> */}
-      <section className="w-full px-4 sm:px-6 lg:px-8">
-        <FeaturedProducts/>
-      </section>
+      <FeaturedProducts/>
 
       {/* Studio/Configuration Section */}
     {/*   <StudioSection /> */}
@@ -72,9 +68,7 @@ export default function Home() {
       {/* <WhyChooseMurgan /> */}
 
       {/* Perspectives/Stories Section */}
-      <section className="w-full px-4 sm:px-6 lg:px-8">
-        <PerspectivesSection />
-      </section>
-    </div>
+      <PerspectivesSection />
+    </>
   );
 }
