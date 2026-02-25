@@ -1,5 +1,7 @@
 import React from 'react';
 import ProductGrid from '@/components/ProductGrid';
+import ProductSidebar from '@/components/ProductSidebar';
+import Hero from '@/components/Hero';
 import { dressProducts } from '@/data/products';
 import { getProductsFromStorage } from '@/utils/storageHelpers';
 
@@ -29,6 +31,9 @@ export default function ProductsPage() {
 
   return (
     <>
+      {/* Hero Section */}
+      <Hero />
+
       {/* Products Header */}
       <section className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 md:py-16">
         <div className="container-custom">
@@ -37,20 +42,21 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      {/* Filters Section (Optional - can be implemented later) */}
-      <section className="bg-gray-50 py-6 md:py-8 border-b">
+      {/* Products Section with Sidebar */}
+      <section className="py-12 md:py-16 bg-white">
         <div className="container-custom">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-600">Showing {storedProducts.length} products</p>
-            {/* Add filter options here */}
-          </div>
-        </div>
-      </section>
+          <div className="flex flex-col md:flex-row gap-8">
+            {/* Sidebar */}
+            <ProductSidebar />
 
-      {/* Products Grid */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="container-custom">
-          <ProductGrid products={storedProducts} loading={loading} />
+            {/* Products Grid */}
+            <div className="flex-1">
+              <div className="mb-6 flex items-center justify-between">
+                <p className="text-gray-600 font-medium">Showing {storedProducts.length} products</p>
+              </div>
+              <ProductGrid products={storedProducts} loading={loading} />
+            </div>
+          </div>
         </div>
       </section>
     </>
