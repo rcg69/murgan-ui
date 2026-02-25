@@ -6,11 +6,18 @@ export default function Hero({
   videoSrc,
   text,
   overlayOpacity,
-  height,
+  viewportHeight, // 👈 new prop (number or string)
 }) {
   return (
     <section
-      className={`relative w-full ${height || 'h-screen'} overflow-hidden bg-black flex items-center justify-center`}
+      className="relative w-full overflow-hidden bg-black flex items-center justify-center"
+      style={{
+        height: viewportHeight
+          ? typeof viewportHeight === "number"
+            ? `${viewportHeight}vh`
+            : viewportHeight
+          : undefined,
+      }}
     >
       {/* Background Video */}
       {videoSrc && (

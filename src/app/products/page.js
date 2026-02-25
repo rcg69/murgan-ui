@@ -1,67 +1,69 @@
-import React from 'react';
-import ProductGrid from '@/components/ProductGrid';
-import ProductSidebar from '@/components/ProductSidebar';
-import Hero from '@/components/Hero';
-import { dressProducts } from '@/data/products';
-import { getProductsFromStorage } from '@/utils/storageHelpers';
+"use client";
 
-// SEO Metadata for Products Page
-export const metadata = {
-  title: 'Products - Murgan Store | Premium Women\'s Fashion',
-  description: 'Browse our complete collection of premium women\'s dresses and fashion items. Find the perfect dress for any occasion with our wide selection.',
-  keywords: 'women dresses, fashion, shop dresses, online shopping, women clothing',
-  openGraph: {
-    title: 'Products - Murgan Store | Premium Women\'s Fashion',
-    description: 'Browse our complete collection of premium women\'s dresses and fashion items',
-    type: 'website',
-    url: 'https://yourshop.com/prodcts',
-    image: 'https://yourshop.com/og-image.png',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Products - Murgan Store | Premium Women\'s Fashion',
-    description: 'Browse our complete collection of premium women\'s dresses',
-  },
-};
+import { useState } from "react";
+import ProductGrid from "@/components/ProductGrid";
+import FilterModal from "@/components/FilterModal";
+import Hero from "@/components/Hero";
+import { dressProducts } from "@/data/products";
 
 export default function ProductsPage() {
-  // SSR: Fetch products server-side
-  const storedProducts = getProductsFromStorage(dressProducts);
-  const loading = false;
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   return (
     <>
-      {/* Hero Section */}
-      {/* <Hero /> */}
+      {/* ================= HERO ================= */}
       <Hero
-        videoSrc="/hero.mp4"
+        videoSrc="/prodHero.mp4"
         overlayOpacity={0.2}
+        viewportHeight={50}
       />
 
+      {/* ============ COLLECTION HEADER ============ */}
+      <section className="bg-white border-b">
+        <div className="container-custom py-10">
 
-      {/* Products Title & Description */}
-{/*       <div className="container-custom mt-8 mb-4">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Products</h1>
-        <p className="text-gray-600 text-lg">Discover our complete collection of premium women's dresses and fashion items</p>
-      </div> */}
+          <div className="grid grid-cols-3 items-center">
 
-      {/* Products Section with Sidebar */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="container-custom">
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Sidebar */}
-            <ProductSidebar />
+            {/* Left spacer (keeps center truly centered) */}
+            <div></div>
 
-            {/* Products Grid */}
-            <div className="flex-1">
-              <div className="mb-6 flex items-center justify-between">
-                <p className="text-gray-600 font-medium">Showing {storedProducts.length} products</p>
-              </div>
-              <ProductGrid products={storedProducts} loading={loading} />
+            {/* Center: Title */}
+            <div className="text-center">
+              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+                Top Products
+              </h1>
+              <p className="mt-2 text-gray-500 text-sm md:text-base">
+                Handpicked styles loved by our customers
+              </p>
             </div>
+
+            {/* Right: Filter Button */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setIsFilterOpen(true)}
+                className="filter-btn"
+              >
+                <span className="filter-icon">⚲</span>
+                Filters
+              </button>
+            </div>
+
           </div>
+
         </div>
       </section>
+
+      {/* ============== PRODUCTS GRID ============== */}
+      <section className="bg-gray-50 py-14">
+        <div className="container-custom">
+          <ProductGrid products={dressProducts} />
+        </div>
+      </section>
+
+      {/* ============== FILTER MODAL ============== */}
+      {isFilterOpen && (
+        <FilterModal onClose={() => setIsFilterOpen(false)} />
+      )}
     </>
   );
 }
