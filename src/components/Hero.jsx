@@ -1,31 +1,45 @@
 "use client";
+
 import "../styles/Hero.css";
-export default function Hero() {
+
+export default function Hero({
+  videoSrc,
+  text,
+  overlayOpacity,
+  height,
+}) {
   return (
-    <section className="relative w-full h-screen min-h-screen overflow-hidden bg-black flex items-center justify-center">
-
+    <section
+      className={`relative w-full ${height || 'h-screen'} overflow-hidden bg-black flex items-center justify-center`}
+    >
       {/* Background Video */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        loading="lazy"
-      >
-        <source src="/hero.mp4" type="video/mp4" />
-      </video>
+      {videoSrc && (
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          loading="lazy"
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      )}
 
-      {/* Overlay (optional, subtle) */}
-      <div className="absolute inset-0 bg-black/20"></div>
+      {/* Overlay */}
+      {overlayOpacity !== undefined && (
+        <div
+          className="absolute inset-0 bg-black"
+          style={{ opacity: overlayOpacity }}
+        />
+      )}
 
       {/* FLOWING TEXT */}
-      <div className="hero-marquee-wrapper">
-        <div className="hero-marquee-text">
-          Elegant design crafted for modern living
+      {text && (
+        <div className="hero-marquee-wrapper">
+          <div className="hero-marquee-text">{text}</div>
         </div>
-      </div>
-
+      )}
     </section>
   );
 }

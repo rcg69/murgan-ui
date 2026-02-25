@@ -32,7 +32,11 @@ export default function ProductsPage() {
   return (
     <>
       {/* Hero Section */}
-      <Hero />
+      {/* <Hero /> */}
+      <Hero
+        videoSrc="/hero.mp4"
+        overlayOpacity={0.2}
+      />
 
 
       {/* Products Title & Description */}

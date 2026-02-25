@@ -39,7 +39,12 @@ export default function Home() {
     <>
       {/* Hero Carousel */}
       {/* <FeaturedCarousel /> */}
-      <Hero />
+      {/* <Hero /> */}
+      <Hero
+          videoSrc="/hero.mp4"
+          text="Elegant design crafted for modern living"
+          overlayOpacity={0.2}
+      />
 
       {/* Collections Grid */}
    {/*    <CollectionsGrid /> */}
