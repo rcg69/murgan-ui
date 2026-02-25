@@ -27,112 +27,172 @@ function Header1() {
             title: "Product",
             description: "Managing a small business today is already tough.",
             items: [
-                {
-                    title: "Reports",
-                    href: "/reports",
-                },
-                {
-                    title: "Statistics",
-                    href: "/statistics",
-                },
-                {
-                    title: "Dashboards",
-                    href: "/dashboards",
-                },
-                {
-                    title: "Recordings",
-                    href: "/recordings",
-                },
+                { title: "Reports", href: "/reports" },
+                { title: "Statistics", href: "/statistics" },
+                { title: "Dashboards", href: "/dashboards" },
+                { title: "Recordings", href: "/recordings" },
             ],
         },
         {
             title: "Company",
             description: "Managing a small business today is already tough.",
             items: [
-                {
-                    title: "About us",
-                    href: "/about",
-                },
-                {
-                    title: "Fundraising",
-                    href: "/fundraising",
-                },
-                {
-                    title: "Investors",
-                    href: "/investors",
-                },
-                {
-                    title: "Contact us",
-                    href: "/contact",
-                },
+                { title: "About us", href: "/about" },
+                { title: "Fundraising", href: "/fundraising" },
+                { title: "Investors", href: "/investors" },
+                { title: "Contact us", href: "/contact" },
             ],
         },
     ];
 
     const [isOpen, setOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [lastScrollY, setLastScrollY] = useState(0);
 
     useEffect(() => {
         const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            
-            // Show shrunk header if scrolled down past 50px
-            if (currentScrollY > 50) {
+            if (window.scrollY > 50) {
                 setIsScrolled(true);
             } else {
                 setIsScrolled(false);
             }
-            
-            setLastScrollY(currentScrollY);
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    // ✅ Mobile Dropdown Component
+    const MobileNavItem = ({ item }) => {
+        const [openDropdown, setOpenDropdown] = useState(false);
+
+        if (item.href) {
+            return (
+                <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="flex justify-between items-center text-lg font-semibold text-black"
+                >
+                    {item.title}
+                    <MoveRight className="w-4 h-4" />
+                </Link>
+            );
+        }
+
+        return (
+            <div className="flex flex-col">
+                <button
+                    onClick={() => setOpenDropdown(!openDropdown)}
+                    className="flex justify-between items-center text-lg font-semibold text-black"
+                >
+                    {item.title}
+                    <MoveRight
+                        className={`w-4 h-4 transition-transform ${
+                            openDropdown ? "rotate-90" : ""
+                        }`}
+                    />
+                </button>
+
+                {openDropdown && (
+                    <div className="pl-4 mt-2 flex flex-col gap-2 bg-white rounded shadow">
+                        {item.items?.map((subItem, idx) => (
+                            <Link
+                                key={idx}
+                                href={subItem.href}
+                                onClick={() => setOpen(false)}
+                                className="text-base font-medium text-muted-foreground"
+                            >
+                                {subItem.title}
+                            </Link>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
-        <header className={`w-full z-40 fixed top-0 left-0 bg-background transition-all duration-300 ${isScrolled ? 'shadow-md' : ''}`}>
-            <div className={`container relative mx-auto flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center transition-all duration-300 ${isScrolled ? 'min-h-14 py-1' : 'min-h-20 py-4'}`}>
+        <header
+            className={`w-full z-40 fixed top-0 left-0 bg-background transition-all duration-300 ${
+                isScrolled ? "shadow-md" : ""
+            }`}
+        >
+            <div
+                className={`container relative mx-auto flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center transition-all duration-300 ${
+                    isScrolled ? "min-h-14 py-1" : "min-h-20 py-4"
+                }`}
+            >
+                {/* Desktop Navigation */}
                 <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
-                    <NavigationMenu className="flex justify-start items-start">
-                        <NavigationMenuList className="flex justify-start gap-4 flex-row">
+                    <NavigationMenu>
+                        <NavigationMenuList className="flex gap-4">
                             {navigationItems.map((item) => (
                                 <NavigationMenuItem key={item.title}>
                                     {item.href ? (
-                                        <>
-                                            <NavigationMenuLink>
-                                                <Button variant="ghost" className={`font-bold text-black transition-all duration-300 ${isScrolled ? 'text-sm' : 'text-base'}`}>{item.title}</Button>
-                                            </NavigationMenuLink>
-                                        </>
+                                        <NavigationMenuLink asChild>
+                                            <Link href={item.href}>
+                                                <Button
+                                                    variant="ghost"
+                                                    className={`font-bold text-black transition-all duration-300 ${
+                                                        isScrolled
+                                                            ? "text-sm"
+                                                            : "text-base"
+                                                    }`}
+                                                >
+                                                    {item.title}
+                                                </Button>
+                                            </Link>
+                                        </NavigationMenuLink>
                                     ) : (
                                         <>
-                                            <NavigationMenuTrigger className={`font-bold text-black transition-all duration-300 ${isScrolled ? 'text-sm' : 'text-base'}`}>
+                                            <NavigationMenuTrigger
+                                                className={`font-bold text-black transition-all duration-300 ${
+                                                    isScrolled
+                                                        ? "text-sm"
+                                                        : "text-base"
+                                                }`}
+                                            >
                                                 {item.title}
                                             </NavigationMenuTrigger>
                                             <NavigationMenuContent className="!w-[450px] p-4">
-                                                <div className="flex flex-col lg:grid grid-cols-2 gap-4">
-                                                    <div className="flex flex-col h-full justify-between">
-                                                        <div className="flex flex-col">
-                                                            <p className="text-lg font-bold text-black">{item.title}</p>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="flex flex-col justify-between">
+                                                        <div>
+                                                            <p className="text-lg font-bold text-black">
+                                                                {item.title}
+                                                            </p>
                                                             <p className="text-muted-foreground text-sm">
                                                                 {item.description}
                                                             </p>
                                                         </div>
-                                                        <Button size="sm" className="mt-10">
+                                                        <Button
+                                                            size="sm"
+                                                            className="mt-10"
+                                                        >
                                                             Book a call today
                                                         </Button>
                                                     </div>
-                                                    <div className="flex flex-col text-sm h-full justify-end">
-                                                        {item.items?.map((subItem) => (
-                                                            <NavigationMenuLink
-                                                                href={subItem.href}
-                                                                key={subItem.title}
-                                                                className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded text-black font-semibold"
-                                                            >
-                                                                <span>{subItem.title}</span>
-                                                                <MoveRight className="w-4 h-4 text-muted-foreground" />
-                                                            </NavigationMenuLink>
-                                                        ))}
+
+                                                    <div className="flex flex-col text-sm justify-end">
+                                                        {item.items?.map(
+                                                            (subItem) => (
+                                                                <NavigationMenuLink
+                                                                    key={
+                                                                        subItem.title
+                                                                    }
+                                                                    href={
+                                                                        subItem.href
+                                                                    }
+                                                                    className="flex justify-between items-center hover:bg-muted py-2 px-4 rounded text-black font-semibold"
+                                                                >
+                                                                    <span>
+                                                                        {
+                                                                            subItem.title
+                                                                        }
+                                                                    </span>
+                                                                    <MoveRight className="w-4 h-4 text-muted-foreground" />
+                                                                </NavigationMenuLink>
+                                                            )
+                                                        )}
                                                     </div>
                                                 </div>
                                             </NavigationMenuContent>
@@ -143,56 +203,57 @@ function Header1() {
                         </NavigationMenuList>
                     </NavigationMenu>
                 </div>
+
+                {/* Logo */}
                 <div className="flex lg:justify-center">
                     <Link href="/">
-                        <span className={`font-black text-black transition-all duration-300 ${isScrolled ? 'text-lg' : 'text-2xl'}`}>
+                        <span
+                            className={`font-black text-black transition-all duration-300 ${
+                                isScrolled ? "text-lg" : "text-2xl"
+                            }`}
+                        >
                             MURGAN
                         </span>
                     </Link>
                 </div>
-                <div className="flex justify-end w-full gap-4">
-                    <Button variant="ghost" className="hidden md:inline font-bold text-black transition-all duration-300">
+
+                {/* Right Buttons */}
+                <div className="hidden lg:flex justify-end w-full gap-4">
+                    <Button
+                        variant="ghost"
+                        className="hidden md:inline font-bold text-black"
+                    >
                         Book a demo
                     </Button>
+
                     <div className="border-r hidden md:inline"></div>
-                    <Button className={`font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg transition-all duration-300 rounded-full ${isScrolled ? 'text-sm' : 'text-base'}`}>Sign in</Button>
-                    <Button className={`font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg transition-all duration-300 rounded-full ${isScrolled ? 'text-sm' : 'text-base'}`}>Get started</Button>
+
+                    <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                        Sign in
+                    </Button>
+
+                    <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                        Get started
+                    </Button>
                 </div>
+
+                {/* Mobile Menu */}
                 <div className="flex w-12 shrink lg:hidden items-end justify-end">
                     <Button variant="ghost" onClick={() => setOpen(!isOpen)}>
-                        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                        {isOpen ? (
+                            <X className="w-5 h-5" />
+                        ) : (
+                            <Menu className="w-5 h-5" />
+                        )}
                     </Button>
+
                     {isOpen && (
-                        <div className="absolute top-20 border-t flex flex-col w-full right-0 bg-background shadow-lg py-4 container gap-8">
-                            {navigationItems.map((item) => (
-                                <div key={item.title}>
-                                    <div className="flex flex-col gap-2">
-                                        {item.href ? (
-                                            <Link
-                                                href={item.href}
-                                                className="flex justify-between items-center"
-                                            >
-                                                <span className="text-xl font-bold text-black">{item.title}</span>
-                                                <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
-                                            </Link>
-                                        ) : (
-                                            <p className="text-xl font-bold text-black">{item.title}</p>
-                                        )}
-                                        {item.items &&
-                                            item.items.map((subItem) => (
-                                                <Link
-                                                    key={subItem.title}
-                                                    href={subItem.href}
-                                                    className="flex justify-between items-center"
-                                                >
-                                                    <span className="text-base font-semibold text-black">
-                                                        {subItem.title}
-                                                    </span>
-                                                    <MoveRight className="w-4 h-4 stroke-1" />
-                                                </Link>
-                                            ))}
-                                    </div>
-                                </div>
+                        <div className="absolute top-20 left-0 border-t flex flex-col w-full bg-white shadow-lg py-4 container gap-6">
+                            {navigationItems.map((item, index) => (
+                                <MobileNavItem
+                                    key={index}
+                                    item={item}
+                                />
                             ))}
                         </div>
                     )}

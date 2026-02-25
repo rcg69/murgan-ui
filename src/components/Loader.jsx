@@ -51,7 +51,7 @@ const MLoader = ({ onComplete, size = 200, duration = 3 } = {}) => {
       variants={slideUp}
       initial="initial"
       animate={isExiting ? "exit" : "initial"}
-      className="fixed inset-0 w-screen h-screen flex items-center justify-center bg-white z-[99999999999]"
+      className="fixed inset-0 w-screen h-screen min-h-screen min-w-screen flex items-center justify-center bg-white z-[99999999999]"
     >
       {dimension.width > 0 && (
         <>
