@@ -6,7 +6,7 @@ export default function FeaturedProducts() {
       {/* Section Header */}
       <div className="featured-header">
         <h2>Featured Collection</h2>
-  {/*       <p>Curated editorial picks for the season</p> */}
+        {/* <p>Curated editorial picks for the season</p> */}
       </div>
 
       {/* Editorial Grid */}

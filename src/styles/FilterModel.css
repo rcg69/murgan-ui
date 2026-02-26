@@ -26,6 +26,12 @@
   justify-content: space-between;
 }
 
+/* revert form control rounding */
+.filter-block select,
+.filter-block input[type="range"] {
+  width: 100%;
+} 
+
 /* Header */
 .filter-header {
   text-align: center;

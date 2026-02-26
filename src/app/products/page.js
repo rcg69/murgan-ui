@@ -20,7 +20,7 @@ export default function ProductsPage() {
 
       {/* ============ COLLECTION HEADER ============ */}
       <section className="bg-white border-b">
-        <div className="container-custom py-10">
+        <div className="container-custom py-24">
 
           <div className="grid grid-cols-3 items-center">
 
@@ -30,11 +30,8 @@ export default function ProductsPage() {
             {/* Center: Title */}
             <div className="text-center">
               <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-                Top Products
+                Our Products
               </h1>
-              <p className="mt-2 text-gray-500 text-sm md:text-base">
-                Handpicked styles loved by our customers
-              </p>
             </div>
 
             {/* Right: Filter Button */}

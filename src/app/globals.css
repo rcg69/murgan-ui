@@ -301,31 +301,7 @@ li {
 }
 
 /* Premium Filter Button */
-.filter-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 36px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #000 0%, #222 100%);
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.35s ease;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-}
-
-.filter-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-}
-
-.filter-btn:active {
-  transform: scale(0.97);
-}
+/* old filter-btn styles removed in favor of tailwind utility classes matching header buttons */
 
 .filter-icon {
   font-size: 1.1rem;
