@@ -224,9 +224,11 @@ function Header1() {
 
                     <div className="border-r hidden md:inline"></div>
 
-                    <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
-                        Sign in
-                    </Button>
+                                        <a href="/signin">
+                                            <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                                    Sign in
+                                            </Button>
+                                        </a>
 
                     <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
                         Get started

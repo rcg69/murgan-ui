@@ -73,6 +73,7 @@
 // }
 "use client";
 import "../styles/Perspectives.css";
+import Heading from "./Heading";
 
 export default function PerspectivesSection() {
   const items = [
@@ -85,10 +86,7 @@ export default function PerspectivesSection() {
   return (
     <section className="perspectives-section">
       {/* Heading */}
-      <div className="perspectives-header">
-        <h2>Popular Products</h2>
-     {/*        <p>A visual journal from our universe</p> */}
-      </div>
+      <Heading title="Popular Products" subtitle={null} />
 
       {/* FLOWING GRID */}
       <div className="perspectives-viewport">
