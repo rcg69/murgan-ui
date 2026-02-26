@@ -12,7 +12,7 @@ export default function ProductGrid({ products, loading = false }) {
 
   if (loading) {
     return (
-      <div className="product-grid" style={{ padding: '32px 24px' }}>
+      <div className="pg-product-grid" style={{ padding: '32px 24px' }}>
         {[...Array(8)].map((_, i) => (
           <div key={i} className="bg-gray-200 h-96 animate-pulse border border-[#e8e8e8] rounded-xl"></div>
         ))}
@@ -29,7 +29,7 @@ export default function ProductGrid({ products, loading = false }) {
   }
 
   return (
-    <div className="product-grid">
+    <div className="pg-product-grid">
       {displayProducts.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

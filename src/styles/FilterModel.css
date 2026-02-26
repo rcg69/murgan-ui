@@ -153,3 +153,81 @@
     opacity: 1;
   }
 }
+@media (max-width: 768px) {
+
+  /* Overlay */
+  .filter-overlay {
+    align-items: flex-end;
+  }
+
+  /* Modal */
+  .filter-modal {
+    width: 100vw;
+    min-height: 85vh;
+    border-radius: 28px 28px 0 0;
+    padding: 28px 22px 24px;
+    animation: slideUpMobile 0.45s ease;
+  }
+
+  /* Header */
+  .filter-header {
+    margin-bottom: 30px;
+  }
+
+  .filter-header h2 {
+    font-size: 1.7rem;
+  }
+
+  .filter-header p {
+    font-size: 0.9rem;
+  }
+
+  /* Content → Single column */
+  .filter-content {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  /* Labels */
+  .filter-block label {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+
+  /* Chips */
+  .chip {
+    padding: 10px 18px;
+    font-size: 0.85rem;
+  }
+
+  .size-chip {
+    min-width: 56px;
+  }
+
+  /* Price labels */
+  .price-labels {
+    font-size: 0.8rem;
+  }
+
+  /* Actions → Sticky bottom */
+  .filter-actions {
+    position: sticky;
+    bottom: 0;
+    margin-top: 30px;
+    padding-top: 16px;
+    background: linear-gradient(
+      to top,
+      rgba(255,255,255,1),
+      rgba(255,255,255,0.9),
+      rgba(255,255,255,0)
+    );
+    gap: 16px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    padding: 14px;
+    font-size: 0.9rem;
+  }
+}

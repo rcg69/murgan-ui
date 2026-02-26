@@ -79,3 +79,11 @@
     animation: hero-marquee-rtl 12s linear infinite;
   }
 }
+@media (max-width: 768px) {
+  .hero,
+  .hero video,
+  .hero img {
+    height: 45vh !important; /* 🔥 controlled height */
+    min-height: 45vh;
+  }
+}

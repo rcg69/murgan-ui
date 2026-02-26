@@ -22,16 +22,16 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="bg-white border border-[#e8e8e8] overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+    <div className="pg-product-card bg-white border border-[#e8e8e8] overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
       {/* Image Container */}
-      <Link href={`/products/${product.categorySlug}/${product.slug}`} className="relative overflow-hidden bg-[#f5f5f5] h-64 flex items-center justify-center group">
+      <Link href={`/products/${product.categorySlug}/${product.slug}`} className="pg-product-card-image-wrapper relative overflow-hidden bg-[#f5f5f5] h-64 flex items-center justify-center group">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="pg-product-card-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         {discount > 0 && (
-          <div className="absolute top-4 right-4 bg-black text-white px-2 py-1 text-xs font-semibold">
+          <div className="pg-product-card-badge absolute top-4 right-4 bg-black text-white px-2 py-1 text-xs font-semibold">
             -{discount}%
           </div>
         )}
@@ -48,7 +48,7 @@ export default function ProductCard({ product }) {
       </Link>
 
       {/* Content Container */}
-      <div className="p-4 flex-grow flex flex-col">
+      <div className="pg-product-card-content p-4 flex-grow flex flex-col">
         {/* Category */}
         <p className="text-xs text-gray-500 mb-2 tracking-wide">{product.category}</p>
 

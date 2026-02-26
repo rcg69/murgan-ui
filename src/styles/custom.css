@@ -118,8 +118,8 @@ li {
   background-color: #efefef;
 }
 
-/* Card Styles */
-.product-card {
+/* Card Styles (unique prefix) */
+.pg-product-card {
   background: white;
   border-radius: 0;
   overflow: hidden;
@@ -127,7 +127,7 @@ li {
   border: 1px solid var(--border-light);
 }
 
-.product-card:hover {
+.pg-product-card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
