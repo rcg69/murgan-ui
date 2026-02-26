@@ -21,6 +21,7 @@ export default function ProductsPage() {
 
       {/* ============ COLLECTION HEADER ============ */}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       <section className="bg-white border-b">
         <div className="container-custom py-10">
 
@@ -54,6 +55,9 @@ export default function ProductsPage() {
 
         </div>
       </section>
+=======
+      <CollectionHeader onFilterOpen={() => setIsFilterOpen(true)} />
+>>>>>>> Stashed changes
 =======
       <CollectionHeader onFilterOpen={() => setIsFilterOpen(true)} />
 >>>>>>> Stashed changes
