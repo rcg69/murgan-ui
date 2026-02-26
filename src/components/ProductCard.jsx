@@ -82,22 +82,11 @@ export default function ProductCard({ product }) {
         </div>
 
         {/* Stock Status */}
-        <div className="mb-4">
-          {product.stock > 0 ? (
-            <p className="text-xs text-gray-600 font-light">In Stock</p>
-          ) : (
-            <p className="text-xs text-red-600 font-light">Out of Stock</p>
-          )}
-        </div>
+
 
         {/* Buttons */}
         <div className="mt-auto space-y-2">
-          <Link
-            href={`/products/${product.categorySlug}/${product.slug}`}
-            className="block w-full bg-black text-white py-2 px-3 text-center text-sm font-light hover:bg-gray-900 transition"
-          >
-            View Details
-          </Link>
+         
 
           {product.stock > 0 && (
             <button
