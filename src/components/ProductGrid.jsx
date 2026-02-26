@@ -3,12 +3,9 @@ import React, { useState } from 'react';
 import { ShoppingCart, Heart, Eye, Star, Filter, Search, X } from 'lucide-react';
 
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import React, { useMemo } from 'react';
 import ProductCard from './ProductCard';
 import '../styles/ProductGrid.css';
-=======
->>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -27,7 +24,6 @@ import '../styles/ProductGrid.css';
 // }
 
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
   if (loading) {
     return (
       <div className="product-grid" style={{ padding: '32px 24px' }}>
@@ -36,8 +32,6 @@ import '../styles/ProductGrid.css';
         ))}
       </div>
 =======
-=======
->>>>>>> Stashed changes
 const ProductsGrid = ({
   products = [
     {
@@ -150,23 +144,17 @@ const ProductsGrid = ({
       prev.includes(productId)
         ? prev.filter(id => id !== productId)
         : [...prev, productId]
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
     );
   };
 
   return (
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
     <div className="product-grid">
       {displayProducts.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
 =======
-=======
->>>>>>> Stashed changes
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -347,9 +335,6 @@ const ProductsGrid = ({
           </div>
         )}
       </div>
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
     </div>
   );
