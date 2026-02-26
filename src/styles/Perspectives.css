@@ -80,3 +80,13 @@
     transform: translateX(-50%);
   }
 }
+@media (max-width: 600px) {
+  .perspective-card {
+    min-width: 80vw;
+    height: 60vw;
+    max-width: 95vw;
+  }
+  .perspectives-header h2 {
+    font-size: 2.2rem;
+  }
+}

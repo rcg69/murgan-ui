@@ -2,6 +2,7 @@
 
 import React, { useMemo } from 'react';
 import ProductCard from './ProductCard';
+import '../styles/ProductGrid.css';
 
 export default function ProductGrid({ products, loading = false }) {
   const displayProducts = useMemo(() => {
@@ -11,9 +12,9 @@ export default function ProductGrid({ products, loading = false }) {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="product-grid" style={{ padding: '32px 24px' }}>
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="bg-gray-200 h-96 animate-pulse border border-[#e8e8e8]"></div>
+          <div key={i} className="bg-gray-200 h-96 animate-pulse border border-[#e8e8e8] rounded-xl"></div>
         ))}
       </div>
     );
@@ -28,7 +29,7 @@ export default function ProductGrid({ products, loading = false }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="product-grid">
       {displayProducts.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
