@@ -4,7 +4,6 @@ import { useState } from "react";
 import ProductGrid from "@/components/ProductGrid";
 import FilterModal from "@/components/FilterModal";
 import Hero from "@/components/Hero";
-import CollectionHeader from "@/components/CollectionHeader";
 import { dressProducts } from "@/data/products";
 
 export default function ProductsPage() {
@@ -20,7 +19,6 @@ export default function ProductsPage() {
       />
 
       {/* ============ COLLECTION HEADER ============ */}
-<<<<<<< Updated upstream
       <section className="bg-white border-b">
         <div className="container-custom py-10">
 
@@ -54,9 +52,6 @@ export default function ProductsPage() {
 
         </div>
       </section>
-=======
-      <CollectionHeader onFilterOpen={() => setIsFilterOpen(true)} />
->>>>>>> Stashed changes
 
       {/* ============== PRODUCTS GRID ============== */}
       <section className="bg-gray-50 py-14">
