@@ -253,6 +253,17 @@ function Header1() {
                                     item={item}
                                 />
                             ))}
+                            {/* Mobile Sign in and Get started buttons */}
+                            <div className="flex flex-col gap-3 mt-4">
+                                <a href="/signin">
+                                    <Button className="w-full font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                        Sign in
+                                    </Button>
+                                </a>
+                                <Button className="w-full font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                    Get started
+                                </Button>
+                            </div>
                         </div>
                     )}
                 </div>
