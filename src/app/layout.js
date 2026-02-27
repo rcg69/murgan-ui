@@ -2,8 +2,7 @@ import './globals.css';
 import { Header1 } from '@/components/ui/header';
 import Footer from '@/components/Footer';
 import LoaderWrapper from '@/components/LoaderWrapper';
-import { CartProvider } from '@/context/CartContext';
-import { AdminProvider } from '@/context/AdminContext';
+import Providers from '@/components/Providers';
 
 export const metadata = {
   title: 'Murgan Store - Premium Women\'s Dresses',
@@ -36,15 +35,11 @@ export default function RootLayout({ children }) {
       </head>
       <body className="pt-20">
         <LoaderWrapper />
-        <AdminProvider>
-          <CartProvider>
-            <Header1 />
-            <main className="min-h-screen">
-              {children}
-            </main>
-            <Footer />
-          </CartProvider>
-        </AdminProvider>
+        <Providers>
+          <Header1 />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

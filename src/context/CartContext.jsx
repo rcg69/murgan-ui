@@ -1,114 +1,90 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { userApi } from '@/lib/apiClient';
+import { useAuth } from '@/context/AuthContext';
 
-const CartContext = createContext();
+const CartContext = createContext(null);
+
+function toCartItems(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw.items)) return raw.items;
+  if (Array.isArray(raw.cartItems)) return raw.cartItems;
+  if (Array.isArray(raw)) return raw;
+  return [];
+}
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const { accessToken, isAuthenticated } = useAuth();
 
-  // Load cart from localStorage on mount
-  useEffect(() => {
-    const savedCart = localStorage.getItem('murganStoreCart');
-    if (savedCart) {
-      try {
-        setCartItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Error loading cart:', error);
-      }
-    }
-    setIsLoading(false);
-  }, []);
+  const cartQuery = useQuery({
+    queryKey: ['cart'],
+    enabled: isAuthenticated,
+    queryFn: ({ signal }) => userApi.getCart(accessToken, signal),
+  });
 
-  // Save cart to localStorage whenever it changes
-  useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem('murganStoreCart', JSON.stringify(cartItems));
-    }
-  }, [cartItems, isLoading]);
+  const cartItems = useMemo(() => toCartItems(cartQuery.data), [cartQuery.data]);
 
-  const addToCart = (product, quantity = 1, selectedColor = '', selectedSize = '') => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find(
-        (item) =>
-          item.id === product.id &&
-          item.selectedColor === selectedColor &&
-          item.selectedSize === selectedSize
-      );
-
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id &&
-          item.selectedColor === selectedColor &&
-          item.selectedSize === selectedSize
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      }
-
-      return [
-        ...prevItems,
-        {
-          ...product,
-          quantity,
-          selectedColor,
-          selectedSize,
-          cartItemId: Date.now(),
-        },
-      ];
-    });
+  const refreshCart = async () => {
+    if (!isAuthenticated) return;
+    await queryClient.invalidateQueries({ queryKey: ['cart'] });
   };
 
-  const removeFromCart = (cartItemId) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.cartItemId !== cartItemId));
-  };
+  const addItemMutation = useMutation({
+    mutationFn: ({ productId, quantity }) =>
+      userApi.addCartItem(accessToken, { productId, quantity }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+  });
 
-  const updateQuantity = (cartItemId, quantity) => {
-    if (quantity < 1) {
-      removeFromCart(cartItemId);
-      return;
-    }
+  const setQuantityMutation = useMutation({
+    mutationFn: ({ productId, quantity }) =>
+      userApi.patchCartItem(accessToken, productId, { quantity }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+  });
 
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.cartItemId === cartItemId ? { ...item, quantity } : item
-      )
-    );
-  };
+  const removeItemMutation = useMutation({
+    mutationFn: ({ productId }) => userApi.deleteCartItem(accessToken, productId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+  });
 
-  const clearCart = () => {
-    setCartItems([]);
-  };
+  const checkoutMutation = useMutation({
+    mutationFn: ({ shippingAddress }) => userApi.checkout(accessToken, { shippingAddress }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+  });
 
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
+  const getTotalItems = () =>
+    cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
 
-  const getTotalItems = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0);
-  };
-
-  const getTotalDiscount = () => {
-    return cartItems.reduce(
-      (total, item) =>
-        total + (item.originalPrice - item.price) * item.quantity,
-      0
-    );
-  };
+  const getTotalPrice = () =>
+    cartItems.reduce((total, item) => {
+      const price = item?.product?.price ?? item?.price ?? 0;
+      return total + price * (item.quantity || 0);
+    }, 0);
 
   return (
     <CartContext.Provider
       value={{
+        cart: cartQuery.data ?? null,
         cartItems,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        getTotalPrice,
+        isLoading: cartQuery.isLoading,
+        error: cartQuery.error ?? null,
+        refreshCart,
+        addToCart: (productId, quantity = 1) => addItemMutation.mutateAsync({ productId, quantity }),
+        setQuantity: (productId, quantity) => setQuantityMutation.mutateAsync({ productId, quantity }),
+        removeItem: (productId) => removeItemMutation.mutateAsync({ productId }),
+        checkout: (shippingAddress) => checkoutMutation.mutateAsync({ shippingAddress }),
         getTotalItems,
-        getTotalDiscount,
-        isLoading,
+        getTotalPrice,
+        isMutating:
+          addItemMutation.isPending ||
+          setQuantityMutation.isPending ||
+          removeItemMutation.isPending ||
+          checkoutMutation.isPending,
       }}
     >
       {children}
@@ -118,8 +94,6 @@ export function CartProvider({ children }) {
 
 export function useCart() {
   const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
+  if (!context) throw new Error('useCart must be used within a CartProvider');
   return context;
 }

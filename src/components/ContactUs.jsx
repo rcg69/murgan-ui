@@ -4,7 +4,7 @@ const ContactUs = () => (
   <section className="contact-us-section p-8 bg-white rounded shadow-md max-w-2xl mx-auto mt-10">
     <h1 className="text-3xl font-bold mb-4 text-center">Contact Us</h1>
     <p className="text-lg text-gray-700 mb-6 text-center">
-      We'd love to hear from you! Reach out to us for any questions, feedback, or support.
+      We&apos;d love to hear from you! Reach out to us for any questions, feedback, or support.
     </p>
     <form className="flex flex-col gap-4">
       <input

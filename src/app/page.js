@@ -5,8 +5,6 @@ import ProductGrid from '@/components/ProductGrid';
 import StudioSection from '@/components/StudioSection';
 import PerspectivesSection from '@/components/PerspectivesSection';
 import WhyChooseMurgan from '@/components/WhyChooseMurgan';
-import { dressProducts } from '@/data/products';
-import { getProductsFromStorage } from '@/utils/storageHelpers';
 import Hero from '@/components/Hero';
 import FeaturedProducts from '@/components/FeaturedProducts';
 
@@ -30,11 +28,6 @@ export const metadata = {
 };
 
 export default function Home() {
-  // SSR: Fetch products server-side
-  const storedProducts = getProductsFromStorage(dressProducts);
-  const featuredProducts = storedProducts.slice(0, 6);
-  const loading = false;
-
   return (
     <>
       {/* Hero Carousel */}

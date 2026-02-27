@@ -152,7 +152,7 @@ export default function AnalyticsDashboard() {
             Dashboard
           </h1>
           <p className="mt-1 text-sm text-gray-600">
-            Welcome back! Here's your performance summary.
+            Welcome back! Here&apos;s your performance summary.
           </p>
         </div>
         <button

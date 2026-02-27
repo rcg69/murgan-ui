@@ -15,7 +15,7 @@ export default function StudioSection() {
               Our dress configurator helps you find the perfect piece tailored to your style, body type, and occasion. 
             </p>
             <p className="text-gray-600 text-sm md:text-base mb-6 md:mb-8 font-light leading-relaxed tracking-wide">
-              Mix and match colors, patterns, and styles to create a look that's uniquely yours. With thousands of combinations available, you'll find the perfect dress for any moment.
+              Mix and match colors, patterns, and styles to create a look that&apos;s uniquely yours. With thousands of combinations available, you&apos;ll find the perfect dress for any moment.
             </p>
             <Link href="/configure" className="btn-primary-pedestal inline-block">
               Start Configuring

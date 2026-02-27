@@ -13,6 +13,8 @@ import { Menu, MoveRight, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 
 import "./header.css";
 
@@ -38,6 +40,9 @@ function Header1() {
 
     const [isOpen, setOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const { isAuthenticated, logout, isAdmin } = useAuth();
+    const { getTotalItems } = useCart();
+    const cartCount = isAuthenticated ? getTotalItems() : 0;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -214,11 +219,42 @@ function Header1() {
 
                     <div className="border-r hidden md:inline"></div>
 
-                                        <a href="/signin">
-                                            <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
-                                                    Sign in
-                                            </Button>
-                                        </a>
+                    <Link href="/cart">
+                        <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                            Cart {cartCount ? `(${cartCount})` : ""}
+                        </Button>
+                    </Link>
+
+                    {isAuthenticated && (
+                        <Link href="/orders">
+                            <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                Orders
+                            </Button>
+                        </Link>
+                    )}
+
+                    {isAdmin && (
+                        <Link href="/admin/dashboard">
+                            <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                Admin
+                            </Button>
+                        </Link>
+                    )}
+
+                    {isAuthenticated ? (
+                        <Button
+                            className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full"
+                            onClick={logout}
+                        >
+                            Logout
+                        </Button>
+                    ) : (
+                        <Link href="/signin">
+                            <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                Sign in
+                            </Button>
+                        </Link>
+                    )}
 
 <Button
   className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full"
@@ -253,14 +289,42 @@ function Header1() {
                             ))}
                             {/* Mobile Sign in and Get started buttons */}
                             <div className="flex flex-col gap-3 mt-4">
-                                <a href="/signin">
+                                <Link href="/cart" onClick={() => setOpen(false)}>
                                     <Button className="w-full font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
-                                        Sign in
+                                        Cart {cartCount ? `(${cartCount})` : ""}
                                     </Button>
-                                </a>
-                                <Button className="w-full font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
-                                    Get started
-                                </Button>
+                                </Link>
+                                {isAuthenticated ? (
+                                    <>
+                                        <Link href="/orders" onClick={() => setOpen(false)}>
+                                            <Button className="w-full font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                                Orders
+                                            </Button>
+                                        </Link>
+                                        {isAdmin && (
+                                            <Link href="/admin/dashboard" onClick={() => setOpen(false)}>
+                                                <Button className="w-full font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                                    Admin
+                                                </Button>
+                                            </Link>
+                                        )}
+                                        <Button
+                                            className="w-full font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full"
+                                            onClick={() => {
+                                                logout();
+                                                setOpen(false);
+                                            }}
+                                        >
+                                            Logout
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Link href="/signin" onClick={() => setOpen(false)}>
+                                        <Button className="w-full font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                            Sign in
+                                        </Button>
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     )}

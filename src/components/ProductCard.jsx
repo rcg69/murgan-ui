@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function ProductCard({ product }) {
   const [showQuickAdd, setShowQuickAdd] = useState(false);
@@ -10,13 +12,25 @@ export default function ProductCard({ product }) {
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || '');
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
-  const discount = Math.round(
-    ((product.originalPrice - product.price) / product.originalPrice) * 100
-  );
+  const stock = product.stockQuantity ?? product.stock ?? 0;
+  const imageSrc = product.imageUrl || product.image || '/saree.png';
+  const categoryName = product.category?.name || product.categoryName || product.category || '';
+  const originalPrice = product.originalPrice;
+  const discount =
+    typeof originalPrice === 'number' && originalPrice > product.price
+      ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
+      : 0;
 
   const handleAddToCart = () => {
-    addToCart(product, quantity, selectedColor, selectedSize);
+    if (!isAuthenticated) {
+      router.push('/signin');
+      return;
+    }
+    // Backend cart is user-scoped; do not send userId or variants.
+    addToCart(product.id, quantity);
     setShowQuickAdd(false);
     setQuantity(1);
   };
@@ -24,9 +38,12 @@ export default function ProductCard({ product }) {
   return (
     <div className="pg-product-card bg-white border border-[#e8e8e8] overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
       {/* Image Container */}
-      <Link href={`/products/${product.categorySlug}/${product.slug}`} className="pg-product-card-image-wrapper relative overflow-hidden bg-[#f5f5f5] h-64 flex items-center justify-center group">
+      <Link
+        href={`/products/${product.id}`}
+        className="pg-product-card-image-wrapper relative overflow-hidden bg-[#f5f5f5] h-64 flex items-center justify-center group"
+      >
         <img
-          src={product.image}
+          src={imageSrc}
           alt={product.name}
           className="pg-product-card-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -35,12 +52,12 @@ export default function ProductCard({ product }) {
             -{discount}%
           </div>
         )}
-        {product.stock < 10 && product.stock > 0 && (
+        {stock < 10 && stock > 0 && (
           <div className="absolute bottom-4 left-4 bg-black text-white px-2 py-1 text-xs font-semibold">
-            Only {product.stock} Left!
+            Only {stock} Left!
           </div>
         )}
-        {product.stock === 0 && (
+        {stock === 0 && (
           <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
             <span className="text-white text-sm font-light">Out of Stock</span>
           </div>
@@ -50,32 +67,36 @@ export default function ProductCard({ product }) {
       {/* Content Container */}
       <div className="pg-product-card-content p-4 flex-grow flex flex-col">
         {/* Category */}
-        <p className="text-xs text-gray-500 mb-2 tracking-wide">{product.category}</p>
+        <p className="text-xs text-gray-500 mb-2 tracking-wide">{categoryName}</p>
 
         {/* Product Name */}
-        <Link href={`/products/${product.categorySlug}/${product.slug}`} className="hover:text-gray-600 transition">
+        <Link href={`/products/${product.id}`} className="hover:text-gray-600 transition">
           <h3 className="font-light text-gray-900 mb-2 line-clamp-2 text-sm">{product.name}</h3>
         </Link>
 
         {/* Rating */}
-        <div className="flex items-center mb-3">
-          <div className="flex text-[#d4a574]">
-            {[...Array(5)].map((_, i) => (
-              <span key={i} className="text-xs">
-                {i < Math.floor(product.rating) ? '★' : '☆'}
-              </span>
-            ))}
+        {typeof product.rating === 'number' && (
+          <div className="flex items-center mb-3">
+            <div className="flex text-[#d4a574]">
+              {[...Array(5)].map((_, i) => (
+                <span key={i} className="text-xs">
+                  {i < Math.floor(product.rating) ? '★' : '☆'}
+                </span>
+              ))}
+            </div>
+            {typeof product.reviews === 'number' && (
+              <span className="text-xs text-gray-600 ml-2">({product.reviews})</span>
+            )}
           </div>
-          <span className="text-xs text-gray-600 ml-2">({product.reviews})</span>
-        </div>
+        )}
 
         {/* Price */}
         <div className="mb-4">
           <div className="flex items-center gap-2">
             <span className="text-base font-semibold text-gray-900">₹{product.price.toLocaleString()}</span>
-            {product.originalPrice > product.price && (
+            {typeof originalPrice === 'number' && originalPrice > product.price && (
               <span className="text-xs text-gray-500 line-through">
-                ₹{product.originalPrice.toLocaleString()}
+                ₹{originalPrice.toLocaleString()}
               </span>
             )}
           </div>
@@ -88,7 +109,7 @@ export default function ProductCard({ product }) {
         <div className="mt-auto space-y-2">
          
 
-          {product.stock > 0 && (
+          {stock > 0 && (
             <button
               onClick={() => setShowQuickAdd(!showQuickAdd)}
               className="w-full border border-black text-black py-2 px-3 text-sm font-light hover:bg-black hover:text-white transition"
@@ -100,7 +121,7 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Quick Add Section */}
-      {showQuickAdd && product.stock > 0 && (
+      {showQuickAdd && stock > 0 && (
         <div className="border-t border-[#e8e8e8] p-4 bg-[#f5f5f5] space-y-3">
           {product.colors && product.colors.length > 0 && (
             <div>
@@ -151,10 +172,10 @@ export default function ProductCard({ product }) {
                 onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                 className="w-12 text-center border border-black py-2 text-sm"
                 min="1"
-                max={product.stock}
+                max={stock}
               />
               <button
-                onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                onClick={() => setQuantity(Math.min(stock, quantity + 1))}
                 className="border border-black px-2 py-2 hover:bg-black hover:text-white text-sm"
               >
                 +

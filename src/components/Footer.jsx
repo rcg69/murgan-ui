@@ -76,7 +76,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-gray-600 leading-relaxed mb-8 text-sm md:text-base">
-              Premium women's dresses crafted with elegance and quality. Discover timeless styles for every occasion.
+              Premium women&apos;s dresses crafted with elegance and quality. Discover timeless styles for every occasion.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map(({ icon: Icon, href }, idx) => (

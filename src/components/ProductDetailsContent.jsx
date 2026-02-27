@@ -1,31 +1,49 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-import { dressProducts } from '@/data/products';
-import { getProductsFromStorage } from '@/utils/storageHelpers';
 import ProductGrid from '@/components/ProductGrid';
+import { useAuth } from '@/context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { publicApi } from '@/lib/apiClient';
+import { normalizePage } from '@/lib/pagination';
+import Link from 'next/link';
 
 export default function ProductDetailsContent({ product, categorySlug, slug }) {
   const router = useRouter();
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
-  const [allProducts, setAllProducts] = useState([]);
+  const stock = product?.stockQuantity ?? product?.stock ?? 0;
+  const imageSrc = product?.imageUrl || product?.image || '/saree.png';
+  const categoryName = product?.category?.name || product?.categoryName || product?.category || '';
+  const categoryId = product?.categoryId ?? product?.category?.id ?? null;
+  const originalPrice = product?.originalPrice;
 
   useEffect(() => {
-    const storedProducts = getProductsFromStorage(dressProducts);
-    setAllProducts(storedProducts);
     if (product && product.colors?.length > 0 && !selectedColor) {
       setSelectedColor(product.colors[0]);
     }
     if (product && product.sizes?.length > 0 && !selectedSize) {
       setSelectedSize(product.sizes[0]);
     }
-  }, [product]);
+  }, [product, selectedColor, selectedSize]);
+
+  const relatedQuery = useQuery({
+    queryKey: ['relatedProducts', categoryId],
+    enabled: Boolean(categoryId),
+    queryFn: ({ signal }) =>
+      publicApi.searchProducts({ categoryId, page: 0, size: 6, sort: 'createdAt,desc' }, signal),
+  });
+
+  const relatedProducts = useMemo(() => {
+    const page = normalizePage(relatedQuery.data?.data ?? relatedQuery.data);
+    return page.items.filter((p) => p?.id !== product?.id).slice(0, 4);
+  }, [relatedQuery.data, product?.id]);
 
   if (!product) {
     return (
@@ -42,32 +60,40 @@ export default function ProductDetailsContent({ product, categorySlug, slug }) {
     );
   }
 
-  const discount = Math.round(
-    ((product.originalPrice - product.price) / product.originalPrice) * 100
-  );
+  const discount =
+    typeof originalPrice === 'number' && originalPrice > product.price
+      ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
+      : 0;
 
   const handleAddToCart = () => {
-    addToCart(product, quantity, selectedColor, selectedSize);
+    if (!isAuthenticated) {
+      router.push(`/signin?next=/products/${product.id}`);
+      return;
+    }
+    addToCart(product.id, quantity);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
   };
-
-  const relatedProducts = allProducts.filter(
-    (p) => p.category === product.category && p.id !== product.id
-  ).slice(0, 4);
 
   return (
     <>
       <div className="container-custom py-8">
         {/* Breadcrumb */}
         <nav className="flex gap-2 mb-8 text-sm text-gray-600">
-          <a href="/" className="hover:text-blue-600">Home</a>
+          <Link href="/" className="hover:text-blue-600">Home</Link>
           <span>/</span>
-          <a href="/products" className="hover:text-blue-600">Products</a>
-          <span>/</span>
-          <a href={`/products?category=${product.category}`} className="hover:text-blue-600">
-            {product.category}
-          </a>
+          <Link href="/products" className="hover:text-blue-600">Products</Link>
+          {categoryName ? (
+            <>
+              <span>/</span>
+              <Link
+                href={categoryId ? `/products?categoryId=${categoryId}` : '/products'}
+                className="hover:text-blue-600"
+              >
+                {categoryName}
+              </Link>
+            </>
+          ) : null}
           <span>/</span>
           <span className="text-gray-900 font-semibold">{product.name}</span>
         </nav>
@@ -78,7 +104,7 @@ export default function ProductDetailsContent({ product, categorySlug, slug }) {
           <div className="lg:col-span-1">
             <div className="bg-gray-100 rounded-lg overflow-hidden sticky top-24">
               <img
-                src={product.image}
+                src={imageSrc}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
@@ -88,34 +114,45 @@ export default function ProductDetailsContent({ product, categorySlug, slug }) {
           {/* Product Information */}
           <div className="lg:col-span-1">
             <div className="mb-6">
-              <p className="text-sm text-gray-500 uppercase tracking-wide mb-2">{product.category}</p>
+              {categoryName ? (
+                <p className="text-sm text-gray-500 uppercase tracking-wide mb-2">{categoryName}</p>
+              ) : null}
               <h1 className="text-3xl md:text-4xl font-light mb-4">{product.name}</h1>
 
               {/* Rating */}
-              <div className="flex items-center gap-2 mb-6">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <i
-                      key={i}
-                      className={`fas fa-star ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
-                    ></i>
-                  ))}
+              {typeof product.rating === 'number' && (
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <i
+                        key={i}
+                        className={`fas fa-star ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
+                      ></i>
+                    ))}
+                  </div>
+                  <span className="text-gray-600">
+                    {product.rating}
+                    {typeof product.reviews === 'number' ? ` (${product.reviews} reviews)` : ''}
+                  </span>
                 </div>
-                <span className="text-gray-600">
-                  {product.rating} ({product.reviews} reviews)
-                </span>
-              </div>
+              )}
 
               {/* Price Section */}
               <div className="mb-6">
                 <div className="flex items-center gap-4 mb-2">
                   <span className="text-3xl font-bold text-blue-600">₹{product.price}</span>
-                  <span className="text-lg text-gray-500 line-through">₹{product.originalPrice}</span>
-                  <span className="bg-red-100 text-red-600 px-3 py-1 rounded text-sm font-semibold">
-                    {discount}% OFF
-                  </span>
+                  {typeof originalPrice === 'number' && originalPrice > product.price && (
+                    <>
+                      <span className="text-lg text-gray-500 line-through">₹{originalPrice}</span>
+                      <span className="bg-red-100 text-red-600 px-3 py-1 rounded text-sm font-semibold">
+                        {discount}% OFF
+                      </span>
+                    </>
+                  )}
                 </div>
-                <p className="text-green-600 font-semibold">In Stock ({product.stock} available)</p>
+                <p className={`font-semibold ${stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {stock > 0 ? `In Stock (${stock} available)` : 'Out of Stock'}
+                </p>
               </div>
 
               {/* Description */}
@@ -211,10 +248,10 @@ export default function ProductDetailsContent({ product, categorySlug, slug }) {
                     onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                     className="flex-1 px-3 py-2 border border-gray-300 rounded text-center"
                     min="1"
-                    max={product.stock}
+                    max={stock || 1}
                   />
                   <button
-                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                    onClick={() => setQuantity(Math.min(stock || 1, quantity + 1))}
                     className="px-3 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50"
                   >
                     +
@@ -225,7 +262,8 @@ export default function ProductDetailsContent({ product, categorySlug, slug }) {
               {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition mb-2"
+                disabled={stock <= 0}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-bold py-3 rounded-lg transition mb-2"
               >
                 Add to Cart
               </button>
@@ -264,7 +302,7 @@ export default function ProductDetailsContent({ product, categorySlug, slug }) {
         <section className="py-16 md:py-24 bg-gray-50">
           <div className="container-custom">
             <h2 className="text-2xl md:text-3xl font-light mb-10">Related Products</h2>
-            <ProductGrid products={relatedProducts} loading={false} />
+            <ProductGrid products={relatedProducts} loading={relatedQuery.isLoading} />
           </div>
         </section>
       )}
