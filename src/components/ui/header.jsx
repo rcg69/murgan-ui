@@ -108,8 +108,8 @@ function Header1() {
 
     return (
         <header
-            className={`w-full z-40 fixed top-0 left-0 bg-background transition-all duration-300 ${
-                isScrolled ? "shadow-md" : ""
+            className={`w-full z-40 fixed top-0 left-0 bg-white transition-all duration-300 ${
+                isScrolled ? "shadow-md" : "" 
             }`}
         >
             <div
