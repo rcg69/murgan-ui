@@ -18,7 +18,7 @@ export default function ProductsPage() {
       <Hero
         videoSrc="/prodHero.mp4"
         overlayOpacity={0.2}
-        viewportHeight={50}
+        viewportHeight={40}
       />
      <Heading title="Products" subtitle={null} />
      

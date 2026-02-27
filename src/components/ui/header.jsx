@@ -31,7 +31,7 @@ function Header1() {
         },
         {
             title: "Company",
-            description: "Managing a small business today is already tough.",
+            /* description: "Managing a small business today is already tough.", */
             items: [
                 { title: "About us", href: "/about" },
                 { title: "Fundraising", href: "/fundraising" },
@@ -215,12 +215,7 @@ function Header1() {
 
                 {/* Right Buttons */}
                 <div className="hidden lg:flex justify-end w-full gap-4">
-                    <Button
-                        variant="ghost"
-                        className="hidden md:inline font-bold text-black"
-                    >
-                        Book a demo
-                    </Button>
+
 
                     <div className="border-r hidden md:inline"></div>
 
