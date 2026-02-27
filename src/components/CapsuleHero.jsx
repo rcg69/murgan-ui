@@ -10,7 +10,7 @@ export default function CapsuleHero() {
       >
         <img
           className="capsule-hero-img-large"
-          src="/saree.png"
+          src="/producthero.png"
           alt="Fashion Capsule Main"
           style={{
             width: '100vw',

@@ -225,9 +225,17 @@ function Header1() {
                                             </Button>
                                         </a>
 
-                    <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
-                        Get started
-                    </Button>
+<Button
+  className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full"
+  onClick={() => {
+    window.open(
+      "https://maps.app.goo.gl/DN2ZC2LyiMQiPtveA",
+      "_blank"
+    );
+  }}
+>
+  Get Directions
+</Button>
                 </div>
 
                 {/* Mobile Menu */}

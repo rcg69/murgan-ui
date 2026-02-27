@@ -1,3 +1,6 @@
+.no-rounded {
+  border-radius: 0 !important;
+}
 /* Overlay */
 .filter-overlay {
   position: fixed;
