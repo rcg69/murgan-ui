@@ -31,13 +31,8 @@ function Header1() {
         },
         {
             title: "Company",
-            /* description: "Managing a small business today is already tough.", */
-            items: [
-                { title: "About us", href: "/about" },
-                { title: "Fundraising", href: "/fundraising" },
-                { title: "Investors", href: "/investors" },
-                { title: "Contact us", href: "/contact" },
-            ],
+            href: "/about",
+            description: "Managing a small business today is already tough.",
         },
     ];
 
