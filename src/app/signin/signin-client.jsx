@@ -9,7 +9,7 @@ import { decodeJwtPayload, extractRoles } from "@/lib/jwt";
 export default function SignInClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login, isAuthenticated, isAdmin } = useAuth();
+  const { login, isAuthenticated, isAdmin, role } = useAuth();
 
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +20,7 @@ export default function SignInClient() {
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    if (isAdmin) {
+    if (role === "admin") {
       router.replace("/admin/dashboard");
     } else {
       router.replace(nextUrl);
@@ -34,16 +34,10 @@ export default function SignInClient() {
     try {
       const res = await login({ usernameOrEmail, password });
       let redirectTo = nextUrl || "/products";
-
-      const token = res?.accessToken;
-      if (token) {
-        const payload = decodeJwtPayload(token);
-        const roles = extractRoles(payload);
-        if (roles.includes("ROLE_ADMIN") || roles.includes("ADMIN")) {
-          redirectTo = "/admin/dashboard";
-        }
+      const userRole = res?.role;
+      if (userRole === "admin") {
+        redirectTo = "/admin/dashboard";
       }
-
       router.replace(redirectTo);
     } catch (err) {
       setError(err?.message || "Failed to sign in.");

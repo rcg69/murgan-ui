@@ -9,12 +9,16 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState(null);
+  const [role, setRole] = useState(null);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     // Keep token primarily in memory; localStorage only for refresh survival.
     const stored = getStoredAccessToken();
     if (stored) setAccessToken(stored);
+    // Optionally, restore role from localStorage if needed
+    const storedRole = typeof window !== 'undefined' ? localStorage.getItem('role') : null;
+    if (storedRole) setRole(storedRole);
     setIsHydrated(true);
   }, []);
 
@@ -25,9 +29,14 @@ export function AuthProvider({ children }) {
   const login = useCallback(async ({ usernameOrEmail, password }) => {
     const res = await authApi.login({ usernameOrEmail, password });
     const token = res?.accessToken;
+    const userRole = res?.role;
     if (!token) throw new Error("Login succeeded but no accessToken returned.");
     setAccessToken(token);
     storeAccessToken(token);
+    if (userRole) {
+      setRole(userRole);
+      if (typeof window !== 'undefined') localStorage.setItem('role', userRole);
+    }
     return res;
   }, []);
 
@@ -37,7 +46,9 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(() => {
     setAccessToken(null);
+    setRole(null);
     clearStoredAccessToken();
+    if (typeof window !== 'undefined') localStorage.removeItem('role');
   }, []);
 
   const value = useMemo(
@@ -47,12 +58,13 @@ export function AuthProvider({ children }) {
       accessToken,
       roles,
       isAdmin,
+      role,
       login,
       register,
       logout,
       jwtPayload: payload,
     }),
-    [isHydrated, accessToken, roles, isAdmin, login, register, logout, payload]
+    [isHydrated, accessToken, roles, isAdmin, role, login, register, logout, payload]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

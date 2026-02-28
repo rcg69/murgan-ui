@@ -87,7 +87,7 @@ export default function AdminProductsPage() {
 
   return (
     <RequireAdmin>
-      <div className="container-custom py-12">
+      <div className="container-custom py-12 flex flex-col items-center">
         <h1 className="text-3xl font-light mb-8">Products</h1>
 
         {error && (

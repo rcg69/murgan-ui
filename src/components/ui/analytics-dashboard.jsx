@@ -1,74 +1,72 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { apiRequest } from '@/lib/apiClient';
 import { LineChart, Line, Tooltip, ResponsiveContainer } from 'recharts';
 import { DollarSign, Users, CreditCard, Activity } from 'lucide-react';
 
 // --- MOCK DATA ---
-const analyticsData = [
-  {
-    title: 'Total Revenue',
-    value: '$45,231.89',
-    change: '+20.1%',
-    changeType: 'positive',
-    icon: DollarSign,
-    chartData: [
-      { name: 'Page A', uv: 4000 },
-      { name: 'Page B', uv: 3000 },
-      { name: 'Page C', uv: 2000 },
-      { name: 'Page D', uv: 2780 },
-      { name: 'Page E', uv: 1890 },
-      { name: 'Page F', uv: 2390 },
-      { name: 'Page G', uv: 3490 },
-    ],
-  },
-  {
-    title: 'Subscriptions',
-    value: '+2350',
-    change: '+180.1%',
-    changeType: 'positive',
-    icon: Users,
-    chartData: [
-      { name: 'Page A', uv: 1200 },
-      { name: 'Page B', uv: 2100 },
-      { name: 'Page C', uv: 1800 },
-      { name: 'Page D', uv: 2500 },
-      { name: 'Page E', uv: 2100 },
-      { name: 'Page F', uv: 3000 },
-      { name: 'Page G', uv: 3200 },
-    ],
-  },
-  {
-    title: 'Sales',
-    value: '+12,234',
-    change: '+19%',
-    changeType: 'negative',
-    icon: CreditCard,
-    chartData: [
-      { name: 'Page A', uv: 4000 },
-      { name: 'Page B', uv: 3500 },
-      { name: 'Page C', uv: 3800 },
-      { name: 'Page D', uv: 3200 },
-      { name: 'Page E', uv: 2800 },
-      { name: 'Page F', uv: 2500 },
-      { name: 'Page G', uv: 2300 },
-    ],
-  },
-  {
-    title: 'Active Now',
-    value: '+573',
-    change: '+201 since last hour',
-    changeType: 'positive',
-    icon: Activity,
-    chartData: [
-      { name: 'Page A', uv: 2000 },
-      { name: 'Page B', uv: 2200 },
-      { name: 'Page C', uv: 2800 },
-      { name: 'Page D', uv: 2400 },
-      { name: 'Page E', uv: 3000 },
-      { name: 'Page F', uv: 2700 },
-      { name: 'Page G', uv: 3800 },
-    ],
-  },
-];
+// --- DATA FETCHING ---
+const icons = {
+  DollarSign,
+  Users,
+  CreditCard,
+  Activity,
+};
+
+function useSalesStats() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    const token = localStorage.getItem('murgan_access_token');
+    fetch('http://localhost:8080/api/admin/sales', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        // Map backend response to stat card format
+        const mappedStats = [
+          {
+            title: "Products Ordered",
+            value: res.productsOrdered,
+            change: "",
+            changeType: "positive",
+            icon: "CreditCard",
+            chartData: res.productsOrderedHistory || [],
+          },
+          {
+            title: "Active Users",
+            value: res.activeUsers,
+            change: "",
+            changeType: "positive",
+            icon: "Users",
+            chartData: res.activeUsersHistory || [],
+          },
+          {
+            title: "Total Revenue",
+            value: `₹${res.totalRevenue}`,
+            change: "",
+            changeType: "positive",
+            icon: "DollarSign",
+            chartData: res.totalRevenueHistory || [],
+          },
+        ];
+        setData(mappedStats);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  }, []);
+
+  return { data, loading, error };
+}
 
 // --- CUSTOM TOOLTIP ---
 const CustomTooltip = ({ active, payload }) => {
@@ -87,18 +85,12 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 // --- STAT CARD COMPONENT ---
-function StatCard({ title, value, change, changeType, icon: Icon, chartData }) {
+function StatCard({ title, value, change, changeType, icon, chartData }) {
   const chartColor = '#000';
   const changeColor = changeType === 'positive' ? 'text-green-600' : 'text-red-500';
-
+  const Icon = icons[icon] || Activity;
   return (
-    <div
-      className="group rounded-2xl border border-black/10
-                 bg-white p-5 shadow-lg
-                 transition-all duration-300 ease-in-out
-                 hover:border-black/20 hover:bg-gray-50
-                 transform hover:-translate-y-1 cursor-pointer"
-    >
+    <div className="group rounded-2xl border border-black/10 bg-white p-5 shadow-lg transition-all duration-300 ease-in-out hover:border-black/20 hover:bg-gray-50 transform hover:-translate-y-1 cursor-pointer">
       <div className="flex items-center justify-between">
         <h3 className="text-base font-medium text-gray-800 font-playfair">{title}</h3>
         <Icon className="h-5 w-5 text-gray-500" />
@@ -156,30 +148,30 @@ export default function AnalyticsDashboard() {
           </p>
         </div>
         <button
-          className="rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white
-                     shadow-sm transition-colors hover:bg-gray-900
-                     focus:outline-none focus:ring-2 focus:ring-black
-                     focus:ring-offset-2 focus:ring-offset-white"
+          className="rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white"
         >
           Generate Report
         </button>
       </header>
 
       <main className="mt-8">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {analyticsData.map((data) => (
-            <StatCard
-              key={data.title}
-              title={data.title}
-              value={data.value}
-              change={data.change}
-              changeType={data.changeType}
-              icon={data.icon}
-              chartData={data.chartData}
-            />
-          ))}
-        </div>
+        <SalesStatsGrid />
       </main>
+    </div>
+  );
+}
+
+// --- SALES STATS GRID ---
+function SalesStatsGrid() {
+  const { data, loading, error } = useSalesStats();
+  if (loading) return <div>Loading sales stats…</div>;
+  if (error) return <div className="text-red-600">Failed to load sales stats.</div>;
+  if (!data.length) return <div>No sales stats available.</div>;
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center place-items-center mx-auto max-w-3xl">
+      {data.map((stat) => (
+        <StatCard key={stat.title} {...stat} />
+      ))}
     </div>
   );
 }

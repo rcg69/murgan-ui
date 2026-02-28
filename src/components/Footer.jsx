@@ -2,7 +2,7 @@
 
 import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon, Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
-import './Footer.css';
+import "../styles/footer.css";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,22 +12,22 @@ export default function Footer() {
       title: "Shop",
       links: [
         { href: "/products", label: "All Collections" },
-        { href: "/products?category=formal", label: "Formal Wear" },
+        /* { href: "/products?category=formal", label: "Formal Wear" },
         { href: "/products?category=casual", label: "Casual Wear" },
         { href: "/products?category=summer", label: "Summer Collection" },
-        { href: "/products?category=party", label: "Party Dresses" },
-        { href: "/", label: "New Arrivals" },
+        { href: "/products?category=party", label: "Party Dresses" }, */
+        { href: "/products?sort=newest", label: "New Arrivals" },
       ],
     },
     {
       title: "Support",
       links: [
-        { href: "/", label: "Contact Us" },
-        { href: "/", label: "FAQs" },
-        { href: "/", label: "Shipping & Returns" },
+        { href: "/contact", label: "Contact Us" },
+        
+        
         { href: "/", label: "Size Guide" },
-        { href: "/", label: "Track Order" },
-        { href: "/", label: "Bulk Orders" },
+       
+        { href: "/contact", label: "Bulk Orders" },
       ],
     },
     {

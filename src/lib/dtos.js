@@ -20,6 +20,7 @@
  * @typedef {Object} AuthLoginResponse
  * @property {string} accessToken
  * @property {string} tokenType
+ * @property {string} role
  *
  * @typedef {Object} CartItemDto
  * @property {number} productId

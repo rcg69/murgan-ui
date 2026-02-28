@@ -12,11 +12,11 @@ import {
 import { Menu, MoveRight, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 
-import "./header.css";
+import "../../styles/header.css";
 
 function Header1() {
     const navigationItems = [
@@ -219,11 +219,13 @@ function Header1() {
 
                     <div className="border-r hidden md:inline"></div>
 
-                    <Link href="/cart">
-                        <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
-                            Cart {cartCount ? `(${cartCount})` : ""}
-                        </Button>
-                    </Link>
+                    {!isAdmin && (
+                        <Link href="/cart">
+                            <Button className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full">
+                                Cart {cartCount ? `(${cartCount})` : ""}
+                            </Button>
+                        </Link>
+                    )}
 
                     {isAuthenticated && (
                         <Link href="/orders">
@@ -256,17 +258,19 @@ function Header1() {
                         </Link>
                     )}
 
-<Button
-  className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full"
-  onClick={() => {
-    window.open(
-      "https://maps.app.goo.gl/DN2ZC2LyiMQiPtveA",
-      "_blank"
-    );
-  }}
->
-  Get Directions
-</Button>
+{!isAdmin && (
+        <Button
+            className="font-bold text-black !bg-white/30 backdrop-blur-md border border-white/40 hover:!bg-white/40 shadow-lg rounded-full"
+            onClick={() => {
+                window.open(
+                    "https://maps.app.goo.gl/DN2ZC2LyiMQiPtveA",
+                    "_blank"
+                );
+            }}
+        >
+            Get Directions
+        </Button>
+)}
                 </div>
 
                 {/* Mobile Menu */}

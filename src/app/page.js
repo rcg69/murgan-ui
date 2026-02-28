@@ -1,10 +1,5 @@
 import React from 'react';
-import FeaturedCarousel from '@/components/FeaturedCarousel';
-import CollectionsGrid from '@/components/CollectionsGrid';
-import ProductGrid from '@/components/ProductGrid';
-import StudioSection from '@/components/StudioSection';
 import PerspectivesSection from '@/components/PerspectivesSection';
-import WhyChooseMurgan from '@/components/WhyChooseMurgan';
 import Hero from '@/components/Hero';
 import FeaturedProducts from '@/components/FeaturedProducts';
 
