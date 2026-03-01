@@ -76,7 +76,7 @@ export default function ProductsPage() {
     return normalizePage(raw);
   }, [productsQuery.data]);
 
-  const products = pageData.items;
+  const products = Array.isArray(pageData.items) ? pageData.items : (pageData.items ? [pageData.items] : []);
 
   return (
     <>

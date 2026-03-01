@@ -29,7 +29,7 @@ export default function ProductCard({ product }) {
   return (
     <div className="pg-product-card bg-white border border-[#e8e8e8] overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
       {/* Image Container */}
-      <Link href={`/products/${product.categorySlug}/${product.slug}`} className="pg-product-card-image-wrapper relative overflow-hidden bg-[#f5f5f5] h-64 flex items-center justify-center group">
+      <Link href={`/products/${product.id}`} className="pg-product-card-image-wrapper relative overflow-hidden bg-[#f5f5f5] h-64 flex items-center justify-center group">
         <img
           src={product.image}
           alt={product.name}
@@ -55,7 +55,9 @@ export default function ProductCard({ product }) {
       {/* Content Container */}
       <div className="pg-product-card-content p-4 flex-grow flex flex-col">
         {/* Category */}
-        <p className="text-xs text-gray-500 mb-2 tracking-wide">{product.category}</p>
+        <p className="text-xs text-gray-500 mb-2 tracking-wide">
+          {typeof product.category === 'object' && product.category !== null ? product.category.name : product.category}
+        </p>
 
         {/* Product Name */}
         <Link href={`/products/${product.categorySlug}/${product.slug}`} className="hover:text-gray-600 transition">

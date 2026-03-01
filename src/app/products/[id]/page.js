@@ -1,20 +1,24 @@
-import ProductDetailsContent from "@/components/ProductDetailsContent";
-import { publicApi } from "@/lib/apiClient";
 import { notFound } from "next/navigation";
+import { publicApi } from "@/lib/apiClient";
 
 export default async function ProductDetailsPage({ params }) {
-  const resolvedParams = typeof params?.then === "function" ? await params : params;
-  const id = Number(resolvedParams?.id);
+  const { id } = await params;   // ✅ FIX
 
-  if (!Number.isFinite(id)) return notFound();
+  const numericId = Number(id);
+
+  if (!Number.isFinite(numericId)) {
+    return notFound();
+  }
 
   try {
-    const res = await publicApi.getProduct(id);
-    const product = res?.data ?? res;
-    if (!product) return notFound();
-    return <ProductDetailsContent product={product} />;
-  } catch {
+    const product = await publicApi.getProduct(numericId);
+
+    return (
+      <div>
+        <h1>{product.name}</h1>
+      </div>
+    );
+  } catch (error) {
     return notFound();
   }
 }
-

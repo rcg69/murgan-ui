@@ -46,51 +46,65 @@ export default function SignInClient() {
     }
   };
 
-  return (
-    <div className="container-custom py-12 max-w-lg">
-      <h1 className="text-3xl font-light mb-6">Sign in</h1>
+ return (
+  <div className="min-h-screen flex items-center justify-center px-4 ">
+    <div className="w-full max-w-md  p-6 sm:p-8 rounded-2xl ">
+      
+      <h1 className="text-2xl sm:text-3xl font-light mb-6 text-center">
+        Sign in
+      </h1>
 
       {error && (
-        <div className="mb-4 p-3 border border-red-200 bg-red-50 text-red-700 rounded">{error}</div>
+        <div className="mb-4 p-3 border border-red-200 bg-red-50 text-red-700 rounded text-sm">
+          {error}
+        </div>
       )}
 
       <form onSubmit={onSubmit} className="space-y-4">
+        
         <div>
-          <label className="block text-sm font-semibold mb-1">Username or Email</label>
+          <label className="block text-sm font-semibold mb-1">
+            Username or Email
+          </label>
           <input
             value={usernameOrEmail}
             onChange={(e) => setUsernameOrEmail(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
             autoComplete="username"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold mb-1">Password</label>
+          <label className="block text-sm font-semibold mb-1">
+            Password
+          </label>
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
             autoComplete="current-password"
             required
           />
         </div>
 
-        <button type="submit" disabled={loading} className="w-full bg-black text-white py-3 rounded-lg disabled:opacity-60">
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-black text-white py-3 rounded-lg transition hover:opacity-90 disabled:opacity-60 mt-4"
+        >
           {loading ? "Signing in..." : "Sign in"}
         </button>
       </form>
 
-      <p className="mt-6 text-sm text-gray-600">
+      <p className="mt-6 text-sm text-gray-600 text-center">
         Don&apos;t have an account?{" "}
         <Link className="underline" href="/register">
           Create one
         </Link>
-        .
       </p>
     </div>
-  );
+  </div>
+ );
 }
-

@@ -45,13 +45,16 @@ export default function AdminDashboard() {
           <AdminHeading title="Admin Dashboard" subtitle="Overview of key metrics and contact messages" />
           <div className="mt-16 mb-16 flex justify-center gap-6">
             <Button asChild variant="outline" className="px-6 py-3 text-base font-semibold">
-              <a href="/admin/products">Manage products</a>
+              {/* Use Next.js Link for client-side navigation */}
+              <Link href="/admin/products">Manage products</Link>
             </Button>
             <Button asChild variant="outline" className="px-6 py-3 text-base font-semibold">
-              <a href="/admin/categories">Manage categories</a>
+              {/* Use Next.js Link for client-side navigation */}
+              <Link href="/admin/categories">Manage categories</Link>
             </Button>
             <Button asChild variant="outline" className="px-6 py-3 text-base font-semibold">
-              <a href="/admin/users">View users</a>
+              {/* Use Next.js Link for client-side navigation */}
+              <Link href="/admin/users">View users</Link>
             </Button>
           </div>
 
