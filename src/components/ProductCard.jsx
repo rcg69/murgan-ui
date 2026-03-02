@@ -21,7 +21,7 @@ export default function ProductCard({ product }) {
       : 0;
 
   const handleAddToCart = () => {
-    addToCart(product, quantity, selectedColor, selectedSize);
+    addToCart(product.id, quantity);
     setShowQuickAdd(false);
     setQuantity(1);
   };
@@ -60,7 +60,7 @@ export default function ProductCard({ product }) {
         </p>
 
         {/* Product Name */}
-        <Link href={`/products/${product.categorySlug}/${product.slug}`} className="hover:text-gray-600 transition">
+        <Link href={`/products/${product.id}`} className="hover:text-gray-600 transition">
           <h3 className="font-light text-gray-900 mb-2 line-clamp-2 text-sm">{product.name}</h3>
         </Link>
 
@@ -93,15 +93,22 @@ export default function ProductCard({ product }) {
 
         {/* Buttons */}
         <div className="mt-auto space-y-2">
-         
-
           {product.stock > 0 && (
-            <button
-              onClick={() => setShowQuickAdd(!showQuickAdd)}
-              className="w-full border border-black text-black py-2 px-3 text-sm font-light hover:bg-black hover:text-white transition"
-            >
-              {showQuickAdd ? 'Cancel' : 'Quick Add'}
-            </button>
+            <>
+              <button
+                onClick={handleAddToCart}
+                className="w-full bg-black text-white py-2 px-3 text-sm font-light hover:bg-gray-900 transition"
+              >
+                Add to Cart
+              </button>
+              <button
+                onClick={() => setShowQuickAdd(!showQuickAdd)}
+                className="w-full border border-black text-black py-2 px-3 text-sm font-light hover:bg-black hover:text-white transition"
+                style={{ marginTop: '8px' }}
+              >
+                {showQuickAdd ? 'Cancel' : 'Quick Add'}
+              </button>
+            </>
           )}
         </div>
       </div>
