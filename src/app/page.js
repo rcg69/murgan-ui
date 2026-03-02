@@ -41,10 +41,9 @@ export default function Home() {
           </div>
           <ProductGrid products={featuredProducts} loading={loading} />
           <div className="text-center mt-10 md:mt-16">
-            {/* Use Next.js Link for client-side navigation */}
-            <Link href="/products" className="btn-secondary-pedestal">
+            <a href="/products" className="btn-secondary-pedestal">
               View All Products
-            </Link>
+            </a>
           </div>
         </div>
       </section> */}
