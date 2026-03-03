@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Image optimization
   images: {
     remotePatterns: [
       {
@@ -10,14 +9,11 @@ const nextConfig = {
     ],
   },
 
-  // Environment variables
   env: {
     NEXT_PUBLIC_SITE_NAME: 'Murgan Store',
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    NEXT_PUBLIC_SITE_URL:
+      process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   },
-  output: 'export',
 };
-
-//module.exports = nextConfig;
 
 export default nextConfig;

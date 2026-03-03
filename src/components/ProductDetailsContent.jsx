@@ -1,311 +1,423 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useCart } from '@/context/CartContext';
-import ProductGrid from '@/components/ProductGrid';
-import { useAuth } from '@/context/AuthContext';
-import { useQuery } from '@tanstack/react-query';
-import { publicApi } from '@/lib/apiClient';
-import { normalizePage } from '@/lib/pagination';
-import Link from 'next/link';
+import React, { useState ,useMemo  } from "react";
+import AddToCartButton from "@/components/AddToCartButton";
+import "../styles/ProductDetailsContent.css";
 
-export default function ProductDetailsContent({ product, categorySlug, slug }) {
-  const router = useRouter();
-  const { addToCart } = useCart();
-  const { isAuthenticated } = useAuth();
-  const [selectedColor, setSelectedColor] = useState('');
-  const [selectedSize, setSelectedSize] = useState('');
+export default function ProductDetailsContent({ product }) {
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [addedToCart, setAddedToCart] = useState(false);
-  const stock = product?.stockQuantity ?? product?.stock ?? 0;
-  const imageSrc = product?.imageUrl || product?.image || '/saree.png';
-  const categoryName = product?.category?.name || product?.categoryName || product?.category || '';
-  const categoryId = product?.categoryId ?? product?.category?.id ?? null;
-  const originalPrice = product?.originalPrice;
-
-  useEffect(() => {
-    if (product && product.colors?.length > 0 && !selectedColor) {
-      setSelectedColor(product.colors[0]);
-    }
-    if (product && product.sizes?.length > 0 && !selectedSize) {
-      setSelectedSize(product.sizes[0]);
-    }
-  }, [product, selectedColor, selectedSize]);
-
-  const relatedQuery = useQuery({
-    queryKey: ['relatedProducts', categoryId],
-    enabled: Boolean(categoryId),
-    queryFn: ({ signal }) =>
-      publicApi.searchProducts({ categoryId, page: 0, size: 6, sort: 'createdAt,desc' }, signal),
-  });
-
-  const relatedProducts = useMemo(() => {
-    const page = normalizePage(relatedQuery.data?.data ?? relatedQuery.data);
-    return page.items.filter((p) => p?.id !== product?.id).slice(0, 4);
-  }, [relatedQuery.data, product?.id]);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   if (!product) {
     return (
-      <div className="container-custom py-12 text-center">
-        <i className="fas fa-exclamation-circle text-5xl text-gray-300 mb-4 block"></i>
-        <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-        <button
-          onClick={() => router.push('/products')}
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
-        >
-          Back to Products
-        </button>
+      <div className="product-details-error">
+        <p>No product found.</p>
       </div>
     );
   }
 
-  const discount =
-    typeof originalPrice === 'number' && originalPrice > product.price
-      ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
-      : 0;
+  // compute a deterministic discount based on product id to avoid SSR/client mismatch
+  const discountPercent = useMemo(() => {
+    // simple pseudo-random: take id mod range
+    const base = Number(product.id) || 0;
+    return (base % 40) + 10; // yields 10-49%
+  }, [product.id]);
 
-  const handleAddToCart = () => {
-    if (!isAuthenticated) {
-      router.push(`/signin?next=/products/${product.id}`);
-      return;
-    }
-    addToCart(product.id, quantity);
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
-  };
+  const originalPrice = useMemo(
+    () => Math.floor(product.price * (1 + discountPercent / 100)),
+    [product.price, discountPercent]
+  );
+
+  // fixed delivery date relative to now (should be same on server/client because it's calculated during render)
+  const deliveryDate = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 5);
+    return d;
+  }, []);
+
+  // Mock images array - using main image with variations
+  const images = [
+    product.imageUrl,
+    product.imageUrl,
+    product.imageUrl,
+    product.imageUrl,
+  ];
+
+  // Mock reviews data
+  const reviews = [
+    {
+      id: 1,
+      author: "Raj Kumar",
+      rating: 5,
+      title: "Excellent quality!",
+      text: "Great product, fast delivery. Highly recommended!",
+      helpful: 245,
+      date: "2 months ago",
+    },
+    {
+      id: 2,
+      author: "Priya Singh",
+      rating: 4,
+      title: "Good value for money",
+      text: "Good quality but took some time to arrive.",
+      helpful: 128,
+      date: "1 month ago",
+    },
+    {
+      id: 3,
+      author: "Amit Patel",
+      rating: 5,
+      title: "Perfect fit!",
+      text: "Exactly as described. Worth every penny.",
+      helpful: 98,
+      date: "3 weeks ago",
+    },
+  ];
+
+  const averageRating = 4.3;
+  const totalReviews = 1248;
 
   return (
-    <>
-      <div className="container-custom py-8">
-        {/* Breadcrumb */}
-        <nav className="flex gap-2 mb-8 text-sm text-gray-600">
-          <Link href="/" className="hover:text-blue-600">Home</Link>
-          <span>/</span>
-          <Link href="/products" className="hover:text-blue-600">Products</Link>
-          {categoryName ? (
-            <>
-              <span>/</span>
-              <Link
-                href={categoryId ? `/products?categoryId=${categoryId}` : '/products'}
-                className="hover:text-blue-600"
-              >
-                {categoryName}
-              </Link>
-            </>
-          ) : null}
-          <span>/</span>
-          <span className="text-gray-900 font-semibold">{product.name}</span>
-        </nav>
-
-        {/* Product Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Image Section */}
-          <div className="lg:col-span-1">
-            <div className="bg-gray-100 rounded-lg overflow-hidden sticky top-24">
+    <div className="product-details-container">
+      <div className="product-details-wrapper">
+        {/* LEFT SECTION - IMAGES */}
+        <div className="product-details-left">
+          {/* Main Image */}
+          <div className="product-main-image-container">
+            <div className="product-main-image">
               <img
-                src={imageSrc}
+                src={images[selectedImageIndex]}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="main-product-img"
               />
-            </div>
-          </div>
-
-          {/* Product Information */}
-          <div className="lg:col-span-1">
-            <div className="mb-6">
-              {categoryName ? (
-                <p className="text-sm text-gray-500 uppercase tracking-wide mb-2">{categoryName}</p>
-              ) : null}
-              <h1 className="text-3xl md:text-4xl font-light mb-4">{product.name}</h1>
-
-              {/* Rating */}
-              {typeof product.rating === 'number' && (
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <i
-                        key={i}
-                        className={`fas fa-star ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
-                      ></i>
-                    ))}
-                  </div>
-                  <span className="text-gray-600">
-                    {product.rating}
-                    {typeof product.reviews === 'number' ? ` (${product.reviews} reviews)` : ''}
-                  </span>
-                </div>
-              )}
-
-              {/* Price Section */}
-              <div className="mb-6">
-                <div className="flex items-center gap-4 mb-2">
-                  <span className="text-3xl font-bold text-blue-600">₹{product.price}</span>
-                  {typeof originalPrice === 'number' && originalPrice > product.price && (
-                    <>
-                      <span className="text-lg text-gray-500 line-through">₹{originalPrice}</span>
-                      <span className="bg-red-100 text-red-600 px-3 py-1 rounded text-sm font-semibold">
-                        {discount}% OFF
-                      </span>
-                    </>
-                  )}
-                </div>
-                <p className={`font-semibold ${stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {stock > 0 ? `In Stock (${stock} available)` : 'Out of Stock'}
-                </p>
-              </div>
-
-              {/* Description */}
-              <p className="text-gray-700 mb-6 text-sm leading-relaxed">{product.description}</p>
-
-              {/* Material & Care */}
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm mb-2">
-                  <span className="font-semibold text-gray-900">Material:</span> {product.material}
-                </p>
-                <p className="text-sm">
-                  <span className="font-semibold text-gray-900">Care:</span> {product.care}
-                </p>
-              </div>
-
-              {/* Features */}
-              {product.features && (
-                <div className="mb-6">
-                  <h3 className="font-semibold mb-2 text-gray-900">Features:</h3>
-                  <ul className="grid grid-cols-2 gap-2">
-                    {product.features.map((feature, idx) => (
-                      <li key={idx} className="text-sm text-gray-600 flex items-center gap-2">
-                        <i className="fas fa-check text-green-600"></i>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              {product.stockQuantity === 0 && (
+                <div className="stock-overlay">Out of Stock</div>
               )}
             </div>
-          </div>
 
-          {/* Add to Cart Section */}
-          <div className="lg:col-span-1">
-            <div className="bg-gray-50 p-6 rounded-lg sticky top-24">
-              {/* Color Selection */}
-              {product.colors && product.colors.length > 0 && (
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold mb-2 text-gray-900">Color</label>
-                  <div className="flex gap-2 flex-wrap">
-                    {product.colors.map((color) => (
-                      <button
-                        key={color}
-                        onClick={() => setSelectedColor(color)}
-                        className={`px-4 py-2 rounded border-2 transition ${
-                          selectedColor === color
-                            ? 'border-blue-600 bg-blue-50'
-                            : 'border-gray-300 hover:border-gray-400'
-                        }`}
-                      >
-                        {color}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Size Selection */}
-              {product.sizes && product.sizes.length > 0 && (
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold mb-2 text-gray-900">Size</label>
-                  <div className="flex gap-2 flex-wrap">
-                    {product.sizes.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={`px-3 py-2 rounded border-2 transition font-semibold ${
-                          selectedSize === size
-                            ? 'border-blue-600 bg-blue-50'
-                            : 'border-gray-300 hover:border-gray-400'
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Quantity Selection */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold mb-2 text-gray-900">Quantity</label>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50"
-                  >
-                    −
-                  </button>
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded text-center"
-                    min="1"
-                    max={stock || 1}
-                  />
-                  <button
-                    onClick={() => setQuantity(Math.min(stock || 1, quantity + 1))}
-                    className="px-3 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* Add to Cart Button */}
-              <button
-                onClick={handleAddToCart}
-                disabled={stock <= 0}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-bold py-3 rounded-lg transition mb-2"
+            {/* Wishlist Button */}
+            <button
+              className={`wishlist-btn ${isWishlisted ? "active" : ""}`}
+              onClick={() => setIsWishlisted(!isWishlisted)}
+              aria-label="Add to wishlist"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill={isWishlisted ? "currentColor" : "none"}
+                stroke="currentColor"
               >
-                Add to Cart
-              </button>
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+          </div>
 
-              {/* Wishlist Button */}
-              <button className="w-full border border-gray-300 hover:border-gray-400 text-gray-700 font-bold py-2 rounded-lg transition">
-                <i className="fas fa-heart mr-2"></i> Add to Wishlist
-              </button>
+          {/* Thumbnail Images */}
+          <div className="product-thumbnails">
+            {images.map((img, index) => (
+              <div
+                key={index}
+                className={`thumbnail ${selectedImageIndex === index ? "active" : ""}`}
+                onClick={() => setSelectedImageIndex(index)}
+              >
+                <img src={img} alt={`Product view ${index + 1}`} />
+              </div>
+            ))}
+          </div>
 
-              {/* Success Message */}
-              {addedToCart && (
-                <div className="mt-4 p-3 bg-green-100 text-green-700 rounded text-sm text-center">
-                  <i className="fas fa-check mr-2"></i> Added to cart successfully!
-                </div>
-              )}
+          {/* Additional Info */}
+          <div className="product-info-banner">
+            <div className="info-item">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div>
+                <p className="info-title">Return within 14 days</p>
+                <p className="info-subtitle">100% original guarantee</p>
+              </div>
+            </div>
+            <div className="info-item">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+              </svg>
+              <div>
+                <p className="info-title">Free shipping</p>
+                <p className="info-subtitle">On orders above ₹999</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-              {/* Shipping Info */}
-              <div className="mt-6 pt-6 border-t border-gray-200 space-y-2 text-sm">
-                <p className="flex items-center gap-2 text-gray-600">
-                  <i className="fas fa-truck text-blue-600"></i> Free shipping on orders over ₹50
+        {/* RIGHT SECTION - DETAILS */}
+        <div className="product-details-right">
+          {/* Product Header */}
+          <div className="product-header">
+            <span className="product-badge">Featured</span>
+            <h1 className="product-title">{product.name}</h1>
+            <p className="product-seller">by {product.category?.name || "Store"}</p>
+          </div>
+
+          {/* Rating Section */}
+          <div className="rating-section">
+            <div className="rating-box">
+              <span className="rating-value">{averageRating}</span>
+              <div className="stars">
+                {[...Array(5)].map((_, i) => (
+                  <svg
+                    key={i}
+                    className={`star ${i < Math.floor(averageRating) ? "filled" : ""}`}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                  </svg>
+                ))}
+              </div>
+            </div>
+            <p className="rating-count">{totalReviews.toLocaleString()} reviews</p>
+          </div>
+
+          {/* Price & Discount Section */}
+          <div className="price-section">
+            <div className="price-container">
+              <span className="current-price">₹{product.price.toLocaleString()}</span>
+              <span className="original-price">₹{originalPrice.toLocaleString()}</span>
+              <span className="discount-badge">{discountPercent}% OFF</span>
+            </div>
+            <p className="inclusive-price">inclusive of all taxes</p>
+          </div>
+
+          {/* Offers Section */}
+          <div className="offers-section">
+            <h3 className="section-title">Available Offers</h3>
+            <div className="offer-item">
+              <span className="offer-icon">🎁</span>
+              <div>
+                <p className="offer-text">
+                  <strong>Bank Offer:</strong> Get 10% off on ICICI Bank credit card
                 </p>
-                <p className="flex items-center gap-2 text-gray-600">
-                  <i className="fas fa-sync text-blue-600"></i> 30-day returns policy
+              </div>
+            </div>
+            <div className="offer-item">
+              <span className="offer-icon">🚚</span>
+              <div>
+                <p className="offer-text">
+                  <strong>Free delivery:</strong> On this order
                 </p>
-                <p className="flex items-center gap-2 text-gray-600">
-                  <i className="fas fa-shield-alt text-blue-600"></i> Secure payment guaranteed
+              </div>
+            </div>
+            <div className="offer-item">
+              <span className="offer-icon">🔄</span>
+              <div>
+                <p className="offer-text">
+                  <strong>Easy Returns:</strong> Return within 14 days of delivery
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Stock & Delivery */}
+          <div className="delivery-section">
+            <div className="stock-info">
+              <p className={`stock-text ${product.stockQuantity > 0 ? "in-stock" : "out-of-stock"}`}>
+                {product.stockQuantity > 0 ? "✓ In Stock" : "✗ Out of Stock"}
+              </p>
+              <p className="stock-count">
+                {product.stockQuantity > 0
+                  ? `Only ${product.stockQuantity} item(s) left`
+                  : "Not available"}
+              </p>
+            </div>
+
+            <div className="delivery-info">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <div>
+                <p className="delivery-date">
+                  Delivery by {deliveryDate.toLocaleDateString("en-IN", {
+                    weekday: "long",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </p>
+                <p className="delivery-detail">12 PM - 4 PM (Next delivery)</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Quantity & Actions */}
+          <div className="quantity-actions">
+            <div className="quantity-selector">
+              <label className="quantity-label">Quantity:</label>
+              <div className="quantity-control">
+                <button
+                  className="qty-btn"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  disabled={quantity <= 1}
+                >
+                  −
+                </button>
+                <span className="qty-value">{quantity}</span>
+                <button
+                  className="qty-btn"
+                  onClick={() => setQuantity(quantity + 1)}
+                  disabled={quantity >= product.stockQuantity}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div className="action-buttons">
+              <AddToCartButton productId={product.id} />
+              <button className="btn-buy-now">Buy Now</button>
+            </div>
+          </div>
+
+          {/* Product Details */}
+          <div className="product-description">
+            <h3 className="section-title">Description</h3>
+            <p className="description-text">{product.description}</p>
+          </div>
+
+          {/* Specifications */}
+          <div className="specifications">
+            <h3 className="section-title">Specifications</h3>
+            <div className="spec-grid">
+              <div className="spec-item">
+                <span className="spec-label">Category</span>
+                <span className="spec-value">{product.category?.name || "N/A"}</span>
+              </div>
+              <div className="spec-item">
+                <span className="spec-label">Stock</span>
+                <span className="spec-value">{product.stockQuantity} units</span>
+              </div>
+              <div className="spec-item">
+                <span className="spec-label">Discount</span>
+                <span className="spec-value">{discountPercent}% OFF</span>
+              </div>
+              <div className="spec-item">
+                <span className="spec-label">Rating</span>
+                <span className="spec-value">{averageRating}/5</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Related Products */}
-      {relatedProducts.length > 0 && (
-        <section className="py-16 md:py-24 bg-gray-50">
-          <div className="container-custom">
-            <h2 className="text-2xl md:text-3xl font-light mb-10">Related Products</h2>
-            <ProductGrid products={relatedProducts} loading={relatedQuery.isLoading} />
+      {/* REVIEWS SECTION */}
+      <div className="reviews-container">
+        <h2 className="reviews-heading">Customer Reviews ({totalReviews.toLocaleString()})</h2>
+
+        <div className="reviews-wrapper">
+          {/* Review Summary */}
+          <div className="review-summary">
+            <div className="summary-content">
+              <div className="summary-rating">
+                <div className="big-rating">{averageRating}</div>
+                <div className="summary-stars">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className={`star ${i < Math.floor(averageRating) ? "filled" : ""}`}
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                    </svg>
+                  ))}
+                </div>
+                <p className="summary-subtext">Based on {totalReviews.toLocaleString()} reviews</p>
+              </div>
+
+              <div className="rating-distribution">
+                {[5, 4, 3, 2, 1].map((star) => (
+                  <div key={star} className="distribution-row">
+                    <span className="distribution-label">{star} ★</span>
+                    <div className="distribution-bar">
+                      <div className="distribution-fill" style={{ width: `${star === 5 ? 65 : star === 4 ? 25 : star === 3 ? 8 : star === 2 ? 1 : 1}%` }}></div>
+                    </div>
+                    <span className="distribution-count">{Math.floor(totalReviews * (star === 5 ? 0.65 : star === 4 ? 0.25 : star === 3 ? 0.08 : 0.01))}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </section>
-      )}
-    </>
+
+          {/* Individual Reviews */}
+          <div className="reviews-list">
+            <div className="reviews-filter">
+              <button className="filter-btn active">All</button>
+              <button className="filter-btn">5 ★</button>
+              <button className="filter-btn">4 ★</button>
+              <button className="filter-btn">3 ★</button>
+              <button className="filter-btn">With images</button>
+            </div>
+
+            {reviews.map((review) => (
+              <div key={review.id} className="review-card">
+                <div className="review-header">
+                  <div className="review-author">
+                    <div className="author-avatar">{review.author.charAt(0)}</div>
+                    <div>
+                      <p className="author-name">{review.author}</p>
+                      <p className="review-date">{review.date}</p>
+                    </div>
+                  </div>
+                  <div className="review-rating">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className={`star ${i < review.rating ? "filled" : ""}`}
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+                <div className="review-content">
+                  <h4 className="review-title">{review.title}</h4>
+                  <p className="review-text">{review.text}</p>
+                </div>
+                <div className="review-footer">
+                  <button className="helpful-btn">👍 Helpful ({review.helpful})</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
