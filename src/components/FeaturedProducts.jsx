@@ -16,6 +16,15 @@ const categoryImages = [
   "https://imgs.search.brave.com/mr2JOuOL-jOIEo5XV3Wo8p3PJrKWWJt1OeKPF05V_hs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZmlsbWliZWF0/LmNvbS9waC1iaWcv/MjAyNi8wNC9hY3Ry/ZXNzLXNhbWFudGhh/LXJlY2VudC1zdHVu/bmluZy1iZWF1dGlm/dWwtc2FyZWUtcGhv/dG9zLXdpdGgtbG90/dXMxNzc2NTgwODQw/XzYuanBn",
 ];
 
+const fallbackCategories = [
+  { id: "silk-sarees", name: "Silk Sarees", image: "/saree.png" },
+  { id: "festive-edit", name: "Festive Edit", image: "/bhagi.jpg" },
+  { id: "everyday-elegance", name: "Everyday Elegance", image: "/k1.png" },
+  { id: "wedding-collection", name: "Wedding Collection", image: "/rash.jpg" },
+  { id: "timeless-classics", name: "Timeless Classics", image: "/saree2.png" },
+  { id: "occasion-edit", name: "The Occasion Edit", image: "/k2.png" },
+];
+
 export default function FeaturedProducts() {
   const categoriesQuery = useQuery({
     queryKey: ["categories"],
@@ -27,37 +36,48 @@ export default function FeaturedProducts() {
     return Array.isArray(raw) ? raw.slice(0, 6) : [];
   }, [categoriesQuery.data]);
 
+  const featuredCategories = categories.length
+    ? categories.map((category, index) => ({
+        ...category,
+        image: categoryImages[index % categoryImages.length],
+        href: `/products?categoryId=${encodeURIComponent(category.id)}`,
+      }))
+    : fallbackCategories.map((category) => ({
+        ...category,
+        href: "/products",
+      }));
+
   return (
     <section className="featured-section">
       <div className="featured-header">
         <h2>Featured Collection</h2>
       </div>
 
-      {categoriesQuery.isError ? (
+      {categoriesQuery.isError && (
         <p className="text-center text-sm text-red-600" role="alert">
-          Unable to load product categories.
+          Unable to load product categories. Showing featured collections instead.
         </p>
-      ) : (
-        <div className="featured-grid">
-          {categories.map((category, index) => (
-            <Link
-              className={`featured-item ${index < 2 ? "large" : ""}`}
-              href={`/products?categoryId=${encodeURIComponent(category.id)}`}
-              key={category.id}
-              aria-label={`Browse ${category.name} products`}
-            >
-              <Image
-                src={categoryImages[index % categoryImages.length]}
-                alt={category.name}
-                fill
-                sizes="(max-width: 900px) 50vw, 25vw"
-                unoptimized
-              />
-              <span>{category.name}</span>
-            </Link>
-          ))}
-        </div>
       )}
+
+      <div className="featured-grid">
+        {featuredCategories.map((category, index) => (
+          <Link
+            className={`featured-item ${index < 2 ? "large" : ""}`}
+            href={category.href}
+            key={category.id}
+            aria-label={`Browse ${category.name} products`}
+          >
+            <Image
+              src={category.image}
+              alt={category.name}
+              fill
+              sizes="(max-width: 900px) 50vw, 25vw"
+              unoptimized
+            />
+            <span>{category.name}</span>
+          </Link>
+        ))}
+      </div>
     </section>
   );
 }

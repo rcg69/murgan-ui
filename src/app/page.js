@@ -10,29 +10,7 @@ export const metadata = {
   keywords: "women dresses, fashion, dress store, online shopping",
 };
 
-async function getFeaturedProducts() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/products`,
-      {
-        cache: "no-store", // always fetch fresh data
-      }
-    );
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch products");
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
-
-export default async function Home() {
-  const products = await getFeaturedProducts();
-
+export default function Home() {
   return (
     <>
       <Hero />

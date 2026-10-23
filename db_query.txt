@@ -1,22 +1,31 @@
 BEGIN;
 
--- 1. Clear existing products and categories
+-- Clear existing products and categories
 DELETE FROM products;
 DELETE FROM categories;
 
--- 2. Reset IDs to start from 1
-ALTER TABLE products ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE categories ALTER COLUMN id RESTART WITH 1;
+-- Reset IDs to start from 1
+SELECT setval(
+    pg_get_serial_sequence('products', 'id'),
+    1,
+    false
+);
 
--- 3. Insert 50 categories
+SELECT setval(
+    pg_get_serial_sequence('categories', 'id'),
+    1,
+    false
+);
+
+-- Insert 50 categories
 INSERT INTO categories (name, description, created_at)
 VALUES
-('Timeless Elegance', 'Classic styles with a timeless appeal.', CURRENT_TIMESTAMP),
-('Modern Glamour', 'Contemporary fashion with a glamorous finish.', CURRENT_TIMESTAMP),
+('Timeless Elegance', 'Classic styles with timeless appeal.', CURRENT_TIMESTAMP),
+('Modern Glamour', 'Contemporary fashion with glamorous details.', CURRENT_TIMESTAMP),
 ('Contemporary Chic', 'Modern designs for a sophisticated look.', CURRENT_TIMESTAMP),
-('Effortless Grace', 'Elegant styles designed for everyday comfort.', CURRENT_TIMESTAMP),
+('Effortless Grace', 'Elegant styles for everyday comfort.', CURRENT_TIMESTAMP),
 ('Minimal Luxury', 'Minimalist designs with premium appeal.', CURRENT_TIMESTAMP),
-('Festive Radiance', 'Festive fashion for memorable celebrations.', CURRENT_TIMESTAMP),
+('Festive Radiance', 'Fashion for festive celebrations.', CURRENT_TIMESTAMP),
 ('The Art of Stillness', 'Refined styles inspired by understated beauty.', CURRENT_TIMESTAMP),
 ('Elegant Grace', 'Graceful styles for special occasions.', CURRENT_TIMESTAMP),
 ('Essential Silhouette', 'Essential pieces with flattering silhouettes.', CURRENT_TIMESTAMP),
@@ -47,10 +56,10 @@ VALUES
 ('Bold Statements', 'Distinctive designs for confident styling.', CURRENT_TIMESTAMP),
 ('Classic Charm', 'Classic pieces with enduring charm.', CURRENT_TIMESTAMP),
 ('Designer Edit', 'Distinctive designs with premium detailing.', CURRENT_TIMESTAMP),
-('Weekend Elegance', 'Relaxed yet refined styles for weekends.', CURRENT_TIMESTAMP),
+('Weekend Elegance', 'Relaxed yet refined weekend styles.', CURRENT_TIMESTAMP),
 ('Evening Allure', 'Sophisticated styles for evening occasions.', CURRENT_TIMESTAMP),
 ('Traditional Treasures', 'Traditional styles for memorable moments.', CURRENT_TIMESTAMP),
-('Modern Heritage', 'A blend of traditional influence and modern design.', CURRENT_TIMESTAMP),
+('Modern Heritage', 'Traditional influence with modern design.', CURRENT_TIMESTAMP),
 ('The Signature Edit', 'Signature styles with a distinctive finish.', CURRENT_TIMESTAMP),
 ('Premium Picks', 'Selected styles with a premium look.', CURRENT_TIMESTAMP),
 ('Graceful Drapes', 'Flowing styles with graceful draping.', CURRENT_TIMESTAMP),
@@ -62,21 +71,21 @@ VALUES
 ('New Classics', 'Fresh interpretations of classic fashion.', CURRENT_TIMESTAMP),
 ('Signature Elegance', 'Distinctive styles with timeless elegance.', CURRENT_TIMESTAMP);
 
--- 4. Insert 300 products: 6 products per category
+-- Insert 300 products using the approved image URLs
 WITH image_sources AS (
     SELECT ARRAY[
-        'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3aEA-NxG-OrCAyCPfnMObJmN5p0_Zmz6vc0C61ykCRVX2DfLP5R1BwtfNfIWO0_5PQ2q2dvl7gmB30Owa1cgK8wwzys8MTEhD8riyg8rawkAmHS7xosqdSxXC6uCn9LaqT-EVu3WJBOI3gFeeJydZpDCwApKYIL1_gntLQs1wWjB5C3IPo2C5QhMo/s1600/keerthy-suresh-at-Sarkaru-Vaari-Paata-Pre-Release%20%284%29.webp',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjBSN8IBmB4RjuphepqDhnKpM2yQCahX8Wx-P9fnk0Vw&s=10',
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoPd7hJXNlgBn0D4G0z5zWTlMX9ut2LfZM4JU42sE_F7a1Q2KPIRzSY2Q&s=10',
         'https://nadiyapaar.com/cdn/shop/files/MalavikaMohanan-1.jpg?v=1761133106&width=2774',
         'https://www.elahe.in/cdn/shop/files/15_bc0859a8-bde1-442d-bd37-6802dafa069b_2048x.png?v=1767361368',
         'https://images.news18.com/webstories/uploads/2025/04/Scent-of-Nostalgia-2025-04-6fb3bbda0937e62cd7c9fa067ae9191c.png',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScKrTT4dvJsW_s-DrvYlBVAKGlxHFhNuhfrQ6FINmAHQ&s=10',
         'https://feeds.abplive.com/onecms/images/uploaded-images/2024/09/25/7ef67145b5dd731e26fd2ed4241f14cfb7245.jpg?impolicy=abp_cdn&imwidth=380',
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbvE3g8dcQjVehvuc1GwT2XtnXe-qBduE4HnKan39E4eZJSxBaCg7bqww&s=10',
         'https://www.devnaagri.com/cdn/shop/products/CelebWebsite189.jpg?v=1751948150',
         'https://www.shaadidukaan.com/vogue/wp-content/uploads/2025/08/471274209_18475725604006330_7942389823496105980_n-1.jpg',
         'https://i.pinimg.com/736x/ea/83/e0/ea83e0fd97a65fdf808f24606ac813ef.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIQJrWNCZZCtSr4GDw8_4qGE4dl6JFebAUwKyqiB2RSgEkxQVxgLlOs9SS&s=10'
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIQJrWNCZZCtSr4GDw8_4qGE4dl6JFebAUwKyqiB2RSgEkxQVxgLlOs9SS&s=10',
+        'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3aEA-NxG-OrCAyCPfnMObJmN5p0_Zmz6vc0C61ykCRVX2DfLP5R1BwtfNfIWO0_5PQ2q2dvl7gmB30Owa1cgK8wwzys8MTEhD8riyg8rawkAmHS7xosqdSxXC6uCn9LaqT-EVu3WJBOI3gFeeJydZpDCwApKYIL1_gntLQs1wWjB5C3IPo2C5QhMo/s1600/keerthy-suresh-at-Sarkaru-Vaari-Paata-Pre-Release%20%284%29.webp'
     ]::text[] AS urls
 ),
 variants AS (
@@ -105,8 +114,12 @@ numbered_products AS (
 product_data AS (
     SELECT
         p.*,
-        i.urls[((p.product_num - 1) % array_length(i.urls, 1)) + 1] AS image1,
-        i.urls[(p.product_num % array_length(i.urls, 1)) + 1] AS image2
+        i.urls[
+            ((p.product_num - 1) % array_length(i.urls, 1)) + 1
+        ] AS image1,
+        i.urls[
+            (p.product_num % array_length(i.urls, 1)) + 1
+        ] AS image2
     FROM numbered_products p
     CROSS JOIN image_sources i
 )
@@ -139,11 +152,11 @@ ORDER BY product_num;
 
 COMMIT;
 
--- 5. Verify category and product counts
+-- Verify the final counts
 SELECT COUNT(*) AS total_categories FROM categories;
 SELECT COUNT(*) AS total_products FROM products;
 
--- 6. Verify product IDs and category assignments
-SELECT id, name, price, discount, stock_quantity, category_id, image_urls
-FROM products
-ORDER BY id;
+-- Verify product IDs
+SELECT MIN(id) AS first_product_id,
+       MAX(id) AS last_product_id
+FROM products;
