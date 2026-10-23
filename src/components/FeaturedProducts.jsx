@@ -24,7 +24,7 @@ export default function FeaturedProducts() {
 
   const categories = useMemo(() => {
     const raw = categoriesQuery.data?.data ?? categoriesQuery.data;
-    return Array.isArray(raw) ? raw : [];
+    return Array.isArray(raw) ? raw.slice(0, 6) : [];
   }, [categoriesQuery.data]);
 
   return (

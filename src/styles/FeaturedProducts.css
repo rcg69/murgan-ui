@@ -109,10 +109,4 @@
     grid-column: span 2;
   }
 
-  /* Hide last two items */
-  .featured-item:nth-child(2),
-  .featured-item:nth-child(5),
-  .featured-item:nth-child(6) {
-    display: none;
-  }
 }
