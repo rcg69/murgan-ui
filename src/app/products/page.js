@@ -28,7 +28,16 @@ export default function ProductsPage() {
   const [maxPrice, setMaxPrice]     = useState("");
   const [inStock, setInStock]       = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [urlCategoryResolved, setUrlCategoryResolved] = useState(false);
   const loadMoreRef = useRef(null);
+
+  useEffect(() => {
+    const categoryParam = new URLSearchParams(window.location.search).get("categoryId");
+    if (/^\d+$/.test(categoryParam ?? "")) {
+      setCategoryId(categoryParam);
+    }
+    setUrlCategoryResolved(true);
+  }, []);
 
   const debouncedQ = useDebouncedValue(q, 300);
 
@@ -80,6 +89,7 @@ export default function ProductsPage() {
         ? pageData.page + 1
         : undefined;
     },
+    enabled: urlCategoryResolved,
   });
 
   const productsError = productsQuery.error;
@@ -198,7 +208,7 @@ export default function ProductsPage() {
       <div className="mt-4">
         <ProductGrid
           products={products}
-          loading={productsQuery.isLoading}
+          loading={!urlCategoryResolved || productsQuery.isLoading}
         />
       </div>
 

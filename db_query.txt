@@ -1,0 +1,149 @@
+BEGIN;
+
+-- 1. Clear existing products and categories
+DELETE FROM products;
+DELETE FROM categories;
+
+-- 2. Reset IDs to start from 1
+ALTER TABLE products ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE categories ALTER COLUMN id RESTART WITH 1;
+
+-- 3. Insert 50 categories
+INSERT INTO categories (name, description, created_at)
+VALUES
+('Timeless Elegance', 'Classic styles with a timeless appeal.', CURRENT_TIMESTAMP),
+('Modern Glamour', 'Contemporary fashion with a glamorous finish.', CURRENT_TIMESTAMP),
+('Contemporary Chic', 'Modern designs for a sophisticated look.', CURRENT_TIMESTAMP),
+('Effortless Grace', 'Elegant styles designed for everyday comfort.', CURRENT_TIMESTAMP),
+('Minimal Luxury', 'Minimalist designs with premium appeal.', CURRENT_TIMESTAMP),
+('Festive Radiance', 'Festive fashion for memorable celebrations.', CURRENT_TIMESTAMP),
+('The Art of Stillness', 'Refined styles inspired by understated beauty.', CURRENT_TIMESTAMP),
+('Elegant Grace', 'Graceful styles for special occasions.', CURRENT_TIMESTAMP),
+('Essential Silhouette', 'Essential pieces with flattering silhouettes.', CURRENT_TIMESTAMP),
+('Modern Form', 'Contemporary silhouettes and refined details.', CURRENT_TIMESTAMP),
+('Minimal Statement', 'Minimal designs that make a statement.', CURRENT_TIMESTAMP),
+('Timeless Wear', 'Versatile styles that never go out of fashion.', CURRENT_TIMESTAMP),
+('Everyday Elegance', 'Elegant fashion for everyday occasions.', CURRENT_TIMESTAMP),
+('The Festive Edit', 'Curated styles for festive celebrations.', CURRENT_TIMESTAMP),
+('Wedding Collection', 'Elegant outfits for wedding celebrations.', CURRENT_TIMESTAMP),
+('Party Wear', 'Statement styles for parties and events.', CURRENT_TIMESTAMP),
+('Heritage Classics', 'Traditional inspiration with a refined finish.', CURRENT_TIMESTAMP),
+('Soft Neutrals', 'Subtle shades and understated elegance.', CURRENT_TIMESTAMP),
+('Statement Drapes', 'Distinctive drapes and expressive designs.', CURRENT_TIMESTAMP),
+('Occasion Wear', 'Special occasion styles with a premium look.', CURRENT_TIMESTAMP),
+('Royal Collection', 'Regal designs inspired by classic elegance.', CURRENT_TIMESTAMP),
+('Urban Elegance', 'City-inspired fashion with modern detailing.', CURRENT_TIMESTAMP),
+('Luxe Essentials', 'Premium essentials for a refined wardrobe.', CURRENT_TIMESTAMP),
+('Classic Traditions', 'Traditional designs with lasting appeal.', CURRENT_TIMESTAMP),
+('Golden Hour', 'Warm tones and standout occasion styles.', CURRENT_TIMESTAMP),
+('Blush Edit', 'Soft colors and delicate styling.', CURRENT_TIMESTAMP),
+('Midnight Glam', 'Bold evening styles with dramatic appeal.', CURRENT_TIMESTAMP),
+('Pure Sophistication', 'Polished styles for sophisticated occasions.', CURRENT_TIMESTAMP),
+('The Grace Edit', 'A curated selection of graceful designs.', CURRENT_TIMESTAMP),
+('Celebration Wear', 'Fashion for celebrations and gatherings.', CURRENT_TIMESTAMP),
+('Silk Stories', 'Elegant designs inspired by silk textures.', CURRENT_TIMESTAMP),
+('Floral Expressions', 'Floral-inspired designs with feminine appeal.', CURRENT_TIMESTAMP),
+('Pastel Dreams', 'Soft pastel tones and delicate details.', CURRENT_TIMESTAMP),
+('Bold Statements', 'Distinctive designs for confident styling.', CURRENT_TIMESTAMP),
+('Classic Charm', 'Classic pieces with enduring charm.', CURRENT_TIMESTAMP),
+('Designer Edit', 'Distinctive designs with premium detailing.', CURRENT_TIMESTAMP),
+('Weekend Elegance', 'Relaxed yet refined styles for weekends.', CURRENT_TIMESTAMP),
+('Evening Allure', 'Sophisticated styles for evening occasions.', CURRENT_TIMESTAMP),
+('Traditional Treasures', 'Traditional styles for memorable moments.', CURRENT_TIMESTAMP),
+('Modern Heritage', 'A blend of traditional influence and modern design.', CURRENT_TIMESTAMP),
+('The Signature Edit', 'Signature styles with a distinctive finish.', CURRENT_TIMESTAMP),
+('Premium Picks', 'Selected styles with a premium look.', CURRENT_TIMESTAMP),
+('Graceful Drapes', 'Flowing styles with graceful draping.', CURRENT_TIMESTAMP),
+('Festive Classics', 'Classic looks for festive occasions.', CURRENT_TIMESTAMP),
+('Luxury Essentials', 'Elevated wardrobe essentials.', CURRENT_TIMESTAMP),
+('Chic Occasions', 'Chic styles for special events.', CURRENT_TIMESTAMP),
+('The Style Edit', 'A curated collection of contemporary styles.', CURRENT_TIMESTAMP),
+('Refined Beauty', 'Refined designs with understated beauty.', CURRENT_TIMESTAMP),
+('New Classics', 'Fresh interpretations of classic fashion.', CURRENT_TIMESTAMP),
+('Signature Elegance', 'Distinctive styles with timeless elegance.', CURRENT_TIMESTAMP);
+
+-- 4. Insert 300 products: 6 products per category
+WITH image_sources AS (
+    SELECT ARRAY[
+        'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3aEA-NxG-OrCAyCPfnMObJmN5p0_Zmz6vc0C61ykCRVX2DfLP5R1BwtfNfIWO0_5PQ2q2dvl7gmB30Owa1cgK8wwzys8MTEhD8riyg8rawkAmHS7xosqdSxXC6uCn9LaqT-EVu3WJBOI3gFeeJydZpDCwApKYIL1_gntLQs1wWjB5C3IPo2C5QhMo/s1600/keerthy-suresh-at-Sarkaru-Vaari-Paata-Pre-Release%20%284%29.webp',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoPd7hJXNlgBn0D4G0z5zWTlMX9ut2LfZM4JU42sE_F7a1Q2KPIRzSY2Q&s=10',
+        'https://nadiyapaar.com/cdn/shop/files/MalavikaMohanan-1.jpg?v=1761133106&width=2774',
+        'https://www.elahe.in/cdn/shop/files/15_bc0859a8-bde1-442d-bd37-6802dafa069b_2048x.png?v=1767361368',
+        'https://images.news18.com/webstories/uploads/2025/04/Scent-of-Nostalgia-2025-04-6fb3bbda0937e62cd7c9fa067ae9191c.png',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScKrTT4dvJsW_s-DrvYlBVAKGlxHFhNuhfrQ6FINmAHQ&s=10',
+        'https://feeds.abplive.com/onecms/images/uploaded-images/2024/09/25/7ef67145b5dd731e26fd2ed4241f14cfb7245.jpg?impolicy=abp_cdn&imwidth=380',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbvE3g8dcQjVehvuc1GwT2XtnXe-qBduE4HnKan39E4eZJSxBaCg7bqww&s=10',
+        'https://www.devnaagri.com/cdn/shop/products/CelebWebsite189.jpg?v=1751948150',
+        'https://www.shaadidukaan.com/vogue/wp-content/uploads/2025/08/471274209_18475725604006330_7942389823496105980_n-1.jpg',
+        'https://i.pinimg.com/736x/ea/83/e0/ea83e0fd97a65fdf808f24606ac813ef.jpg',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIQJrWNCZZCtSr4GDw8_4qGE4dl6JFebAUwKyqiB2RSgEkxQVxgLlOs9SS&s=10'
+    ]::text[] AS urls
+),
+variants AS (
+    SELECT *
+    FROM (VALUES
+        (1, 'Signature Style'),
+        (2, 'Classic Charm'),
+        (3, 'Modern Muse'),
+        (4, 'Elegant Appeal'),
+        (5, 'Premium Collection'),
+        (6, 'Designer Choice')
+    ) AS v(variant_num, variant_name)
+),
+numbered_products AS (
+    SELECT
+        c.id AS category_id,
+        c.name AS category_name,
+        v.variant_num,
+        v.variant_name,
+        ROW_NUMBER() OVER (
+            ORDER BY c.id, v.variant_num
+        ) AS product_num
+    FROM categories c
+    CROSS JOIN variants v
+),
+product_data AS (
+    SELECT
+        p.*,
+        i.urls[((p.product_num - 1) % array_length(i.urls, 1)) + 1] AS image1,
+        i.urls[(p.product_num % array_length(i.urls, 1)) + 1] AS image2
+    FROM numbered_products p
+    CROSS JOIN image_sources i
+)
+INSERT INTO products (
+    name,
+    description,
+    price,
+    discount,
+    stock_quantity,
+    image_urls,
+    created_at,
+    category_id
+)
+SELECT
+    LEFT(category_name || ' - ' || variant_name, 200),
+    LEFT(
+        'Discover our ' || variant_name ||
+        ' from the ' || category_name ||
+        ' collection, created for a refined and elegant look.',
+        500
+    ),
+    (1499 + ((product_num * 137) % 8500))::numeric(12,2),
+    ((product_num * 3) % 21)::numeric(5,2),
+    10 + ((product_num * 7) % 91),
+    image1 || ',' || image2,
+    CURRENT_TIMESTAMP,
+    category_id
+FROM product_data
+ORDER BY product_num;
+
+COMMIT;
+
+-- 5. Verify category and product counts
+SELECT COUNT(*) AS total_categories FROM categories;
+SELECT COUNT(*) AS total_products FROM products;
+
+-- 6. Verify product IDs and category assignments
+SELECT id, name, price, discount, stock_quantity, category_id, image_urls
+FROM products
+ORDER BY id;
