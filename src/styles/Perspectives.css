@@ -43,7 +43,7 @@
   display: flex;
   gap: 40px;
   width: max-content;
-  animation: perspectives-marquee 35s linear infinite;
+  animation: perspectives-marquee 70s linear infinite;
 }
 
 /* Card */
