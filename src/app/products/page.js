@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Sliders } from "lucide-react";
 import ProductGrid from "@/components/ProductGrid";
 import { ProductsMinimalistHero } from "@/components/ui/products-minimalist-hero";
 import FilterModal from "@/components/FilterModal";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { publicApi } from "@/lib/apiClient";
 import { normalizePage } from "@/lib/pagination";
 
@@ -20,7 +20,6 @@ function useDebouncedValue(value, delayMs) {
 }
 
 export default function ProductsPage() {
-  const [page, setPage]             = useState(0);
   const [size]                      = useState(12);
   const [sort, setSort]             = useState("createdAt,desc");
   const [categoryId, setCategoryId] = useState("");
@@ -29,6 +28,7 @@ export default function ProductsPage() {
   const [maxPrice, setMaxPrice]     = useState("");
   const [inStock, setInStock]       = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const loadMoreRef = useRef(null);
 
   const debouncedQ = useDebouncedValue(q, 300);
 
@@ -49,12 +49,13 @@ export default function ProductsPage() {
     Boolean(maxPrice) ||
     Boolean(inStock);
 
-  const productsQuery = useQuery({
+  const productsQuery = useInfiniteQuery({
     queryKey: [
       useSearchEndpoint ? "productsSearch" : "products",
-      { page, size, sort, categoryId, q: debouncedQ, minPrice, maxPrice, inStock },
+      { size, sort, categoryId, q: debouncedQ, minPrice, maxPrice, inStock },
     ],
-    queryFn: ({ signal }) => {
+    initialPageParam: 0,
+    queryFn: ({ pageParam, signal }) => {
       if (useSearchEndpoint) {
         return publicApi.searchProducts(
           {
@@ -63,34 +64,66 @@ export default function ProductsPage() {
             minPrice: minPrice ? Number(minPrice) : undefined,
             maxPrice: maxPrice ? Number(maxPrice) : undefined,
             inStock: inStock ? true : undefined,
-            page,
+            page: pageParam,
             size,
             sort,
           },
           signal
         );
       }
-      return publicApi.getProducts({ page, size, sort }, signal);
+      return publicApi.getProducts({ page: pageParam, size, sort }, signal);
     },
-    placeholderData: (prev) => prev,
+    getNextPageParam: (lastPage) => {
+      const raw = lastPage?.data ?? lastPage;
+      const pageData = normalizePage(raw);
+      return pageData.page + 1 < pageData.totalPages
+        ? pageData.page + 1
+        : undefined;
+    },
   });
 
+  const productsError = productsQuery.error;
+
   useEffect(() => {
-    if (productsQuery.error) {
-      console.error("Failed to load products:", productsQuery.error);
+    if (productsError) {
+      console.error("Failed to load products:", productsError);
     }
-  }, [productsQuery.error]);
+  }, [productsError]);
 
-  const pageData = useMemo(() => {
-    const raw = productsQuery.data?.data ?? productsQuery.data;
-    return normalizePage(raw);
-  }, [productsQuery.data]);
+  const products = useMemo(
+    () =>
+      (productsQuery.data?.pages ?? []).flatMap((response) => {
+        const raw = response?.data ?? response;
+        const items = normalizePage(raw).items;
+        return Array.isArray(items) ? items : items ? [items] : [];
+      }),
+    [productsQuery.data]
+  );
 
-  const products = Array.isArray(pageData.items)
-    ? pageData.items
-    : pageData.items
-    ? [pageData.items]
-    : [];
+  const {
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = productsQuery;
+
+  useEffect(() => {
+    const sentinel = loadMoreRef.current;
+    if (!sentinel || !hasNextPage || isFetchingNextPage) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      { rootMargin: "400px" }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const activeFilterCount = [categoryId, minPrice, maxPrice, inStock].filter(Boolean).length;
 
@@ -125,7 +158,7 @@ export default function ProductsPage() {
         <div className="flex-1 min-w-0">
           <input
             value={q}
-            onChange={(e) => { setQ(e.target.value); setPage(0); }}
+            onChange={(e) => setQ(e.target.value)}
             placeholder="Search products..."
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-full focus:outline-none focus:border-[#d4a574] transition-all text-sm"
           />
@@ -165,31 +198,18 @@ export default function ProductsPage() {
       <div className="mt-4">
         <ProductGrid
           products={products}
-          loading={productsQuery.isLoading || productsQuery.isFetching}
+          loading={productsQuery.isLoading}
         />
       </div>
 
-      {/* ── Pagination ── */}
-      {pageData.totalPages > 1 && (
-        <div className="flex items-center justify-between mt-10 px-4 sm:px-6 md:px-0">
-          <button
-            disabled={page <= 0}
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            className="px-4 py-2 border border-gray-300 rounded-full text-sm disabled:opacity-50 hover:border-gray-400 transition-all"
-          >
-            Previous
-          </button>
-          <div className="text-sm text-gray-600">
-            Page <span className="font-semibold">{page + 1}</span> of{" "}
-            <span className="font-semibold">{pageData.totalPages}</span>
-          </div>
-          <button
-            disabled={page + 1 >= pageData.totalPages}
-            onClick={() => setPage((p) => p + 1)}
-            className="px-4 py-2 border border-gray-300 rounded-full text-sm disabled:opacity-50 hover:border-gray-400 transition-all"
-          >
-            Next
-          </button>
+      {hasNextPage && (
+        <div
+          ref={loadMoreRef}
+          className="flex justify-center py-8 text-sm text-gray-500"
+          role="status"
+          aria-live="polite"
+        >
+          {isFetchingNextPage ? "Loading more products..." : ""}
         </div>
       )}
 
@@ -198,9 +218,9 @@ export default function ProductsPage() {
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
         sort={sort}
-        onSortChange={(v) => { setSort(v); setPage(0); }}
+        onSortChange={setSort}
         categoryId={categoryId}
-        onCategoryChange={(v) => { setCategoryId(v); setPage(0); }}
+        onCategoryChange={setCategoryId}
         minPrice={minPrice}
         onMinPriceChange={setMinPrice}
         maxPrice={maxPrice}
@@ -214,7 +234,6 @@ export default function ProductsPage() {
           setMaxPrice("");
           setInStock(false);
           setSort("createdAt,desc");
-          setPage(0);
         }}
       />
     </>
