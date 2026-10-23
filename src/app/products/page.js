@@ -75,6 +75,12 @@ export default function ProductsPage() {
     placeholderData: (prev) => prev,
   });
 
+  useEffect(() => {
+    if (productsQuery.error) {
+      console.error("Failed to load products:", productsQuery.error);
+    }
+  }, [productsQuery.error]);
+
   const pageData = useMemo(() => {
     const raw = productsQuery.data?.data ?? productsQuery.data;
     return normalizePage(raw);
@@ -151,8 +157,7 @@ export default function ProductsPage() {
       {/* ── Error ── */}
       {productsQuery.isError && (
         <div className="mx-4 sm:mx-6 md:mx-0 mt-2 p-4 border border-red-200 bg-red-50 text-red-700 rounded">
-          Failed to load products.{" "}
-          {productsQuery.error?.message ? `(${productsQuery.error.message})` : ""}
+          Unable to load products. Please try again later.
         </div>
       )}
 

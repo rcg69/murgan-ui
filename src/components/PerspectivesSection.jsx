@@ -76,12 +76,38 @@ import "../styles/Perspectives.css";
 import Heading from "./Heading";
 
 export default function PerspectivesSection() {
-  const items = [
-    { id: 1, image: "/saree2.png", title: "Cristian D'Or" },
-    { id: 2, image: "/saree2.png", title: "Louise Tehofri" },
-    { id: 3, image: "/saree2.png", title: "Mathilde Nansen" },
-    { id: 4, image: "/saree2.png", title: "Gökçe Tercioglu" },
-  ];
+const items = [
+  {
+    id: 1,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoPd7hJXNlgBn0D4G0z5zWTlMX9ut2LfZM4JU42sE_F7a1Q2KPIRzSY2Q&s=10",
+    title: "Timeless Elegance",
+  },
+  {
+    id: 2,
+    image: "https://static.toiimg.com/thumb/115075604/115075604.jpg?height=746&width=420&resizemode=76&imgsize=68958",
+    title: "Modern Glamour",
+  },
+  {
+    id: 3,
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjT4DLn3RCC_d-y2IGWZuraQynC1O6-6BaQvX04JwitpjtDZXpe5IwqGxt&s=10",
+    title: "Contemporary Chic",
+  },
+  {
+    id: 4,
+    image: "https://nadiyapaar.com/cdn/shop/files/MalavikaMohanan-1.jpg?v=1761133106&width=2774",
+    title: "Effortless Grace",
+  },
+  {
+    id: 5,
+    image: "https://www.elahe.in/cdn/shop/files/15_bc0859a8-bde1-442d-bd37-6802dafa069b_2048x.png?v=1767361368",
+    title: "Minimal Luxury",
+  },
+  {
+    id: 6,
+    image: "https://images.news18.com/webstories/uploads/2025/04/Scent-of-Nostalgia-2025-04-6fb3bbda0937e62cd7c9fa067ae9191c.png",
+    title: "Festive Radiance",
+  },
+];
 
   return (
     <section className="perspectives-section">

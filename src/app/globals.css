@@ -1,8 +1,8 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
-@import 'bootstrap/dist/css/bootstrap.css';
 
+@layer base {
 /* CSS Variables for shadcn/ui components */
 :root {
   --radius: 0.5rem;
@@ -247,6 +247,7 @@ li {
   font-weight: 300;
   line-height: 1.2;
   letter-spacing: -0.5px;
+}
 }
 
 /* Custom Tailwind Components */

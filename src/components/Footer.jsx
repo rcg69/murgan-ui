@@ -1,8 +1,16 @@
 "use client";
 
-import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon, Mail, Phone, MapPin } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Linkedin,
+  Twitter,
+  Mail,
+  Phone,
+  MapPin,
+  ArrowUpRight,
+} from "lucide-react";
 import Link from "next/link";
-import "../styles/footer.css";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -48,134 +56,144 @@ export default function Footer() {
   ];
 
   const socialLinks = [
-    { icon: FacebookIcon, href: "#" },
-    { icon: InstagramIcon, href: "#" },
-    { icon: TwitterIcon, href: "#" },
-    { icon: LinkedinIcon, href: "#" },
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Linkedin, href: "#", label: "LinkedIn" },
   ];
 
   return (
-    <footer className="bg-gray-50 pt-24 pb-6">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+    <footer className="bg-[#f7f6f3] text-[#191919]">
+      <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+        {/* Main footer */}
+        <div className="grid grid-cols-1 gap-12 pt-16 pb-10 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-12 sm:pt-20 sm:pb-12 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-0 lg:pt-24 lg:pb-16">
+          {/* Brand */}
+          <div className="sm:col-span-2 lg:col-span-4">
+            <Link
+              href="/"
+              aria-label="MURGAN home"
+              className="inline-flex items-center gap-3"
+            >
+              <img
+                src="/logo.png"
+                alt="MURGAN"
+                className="h-11 w-auto object-contain sm:h-12"
+              />
 
-        {/* TOP SECTION */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-12">
-
-          {/* BRAND */}
-          <div className="text-left">
-
-
-            <div className="flex items-center mb-8">
-              <img src="/logo.png" alt="Murgan Logo" className="h-12 w-auto mr-3" style={{objectFit: 'contain'}} />
-              <span className="text-xl font-semibold tracking-[0.2em] text-black">
+              <span className="text-lg font-medium tracking-[0.24em] sm:text-xl">
                 MURGAN
               </span>
-            </div>
+            </Link>
 
-            <p className="text-gray-600 leading-relaxed mb-8 text-sm md:text-base">
-              Premium women&apos;s dresses crafted with elegance and quality.
-              Discover timeless styles for every occasion.
+            <p className="mt-5 max-w-sm text-sm leading-7 text-neutral-600 sm:text-[15px]">
+              Premium women&apos;s fashion crafted with elegance and quality.
+              Discover timeless styles designed for every occasion.
             </p>
 
-            <div className="flex space-x-4">
-              {socialLinks.map(({ icon: Icon, href }, idx) => (
+            {/* Social links */}
+            <div className="mt-6 flex items-center gap-3">
+              {socialLinks.map(({ icon: Icon, href, label }) => (
                 <a
-                  key={idx}
+                  key={label}
                   href={href}
-                  className="w-10 h-10 rounded-xl bg-white border border-black/10 flex items-center justify-center text-gray-600 hover:text-black hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-md"
+                  aria-label={label}
+                  className="flex h-10 w-10 items-center justify-center border border-neutral-300 text-neutral-700 transition-colors duration-200 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
                 >
-                  <Icon size={18} />
+                  <Icon size={17} strokeWidth={1.6} />
                 </a>
               ))}
             </div>
 
-          </div>
+            {/* Contact */}
+            <div className="mt-12 border-t border-neutral-200 pt-8">
+              <h3 className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                Get in touch
+              </h3>
 
-          {/* SHOP */}
-          <div className="text-left">
-            <h4 className="text-lg font-semibold tracking-tight mb-6 text-black">
-              {footerLinks[0].title}
-            </h4>
-
-            <ul className="space-y-2">
-              {footerLinks[0].links.map((link, idx) => (
-                <li key={idx}>
-                  <Link
-                    href={link.href}
-                    className="relative text-gray-600 hover:text-black text-sm after:absolute after:left-0 after:-bottom-1 after:h-[1px] after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full"
-                  >
-                    {link.label}
-                  </Link>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3 text-sm leading-6 text-neutral-600">
+                  <MapPin
+                    size={17}
+                    strokeWidth={1.6}
+                    className="mt-1 shrink-0 text-neutral-500"
+                  />
+                  <span>New Delhi, India</span>
                 </li>
-              ))}
-            </ul>
-          </div>
 
-          {/* SUPPORT */}
-          <div className="text-left">
-            <h4 className="text-lg font-semibold tracking-tight mb-6 text-black">
-              {footerLinks[1].title}
-            </h4>
-
-            <ul className="space-y-2">
-              {footerLinks[1].links.map((link, idx) => (
-                <li key={idx}>
-                  <Link
-                    href={link.href}
-                    className="relative text-gray-600 hover:text-black text-sm after:absolute after:left-0 after:-bottom-1 after:h-[1px] after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full"
+                <li>
+                  <a
+                    href="mailto:support@murgan.com"
+                    className="flex min-w-0 items-start gap-3 text-sm leading-6 text-neutral-600 transition-colors hover:text-black"
                   >
-                    {link.label}
-                  </Link>
+                    <Mail
+                      size={17}
+                      strokeWidth={1.6}
+                      className="mt-1 shrink-0 text-neutral-500"
+                    />
+                    <span className="break-all">support@murgan.com</span>
+                  </a>
                 </li>
-              ))}
-            </ul>
+
+                <li>
+                  <a
+                    href="tel:+919876543210"
+                    className="flex items-start gap-3 text-sm leading-6 text-neutral-600 transition-colors hover:text-black"
+                  >
+                    <Phone
+                      size={17}
+                      strokeWidth={1.6}
+                      className="mt-1 shrink-0 text-neutral-500"
+                    />
+                    <span>+91 98765 43210</span>
+                  </a>
+                </li>
+              </ul>
+
+              <Link
+                href="/contact"
+                className="mt-6 inline-flex items-center gap-2 border-b border-neutral-400 pb-1 text-xs font-medium uppercase tracking-[0.13em] transition-colors hover:border-black"
+              >
+                Contact our team
+                <ArrowUpRight size={14} />
+              </Link>
+            </div>
           </div>
 
-          {/* CONTACT */}
-          <div className="text-left">
-            <h4 className="text-lg font-semibold tracking-tight mb-6 text-black">
-              Contact
-            </h4>
+          {/* Navigation */}
+          <div className="grid grid-cols-2 gap-x-6 gap-y-9 sm:col-span-2 sm:grid-cols-4 sm:gap-x-5 lg:col-span-8">
+            {footerLinks.map((group) => (
+              <div key={group.title}>
+                <h3 className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-900">
+                  {group.title}
+                </h3>
 
-            <ul className="space-y-4">
-
-              <li className="text-gray-600 flex items-center text-sm">
-                <MapPin className="w-5 h-5 mr-2 text-gray-400" />
-                <span>New Delhi, India</span>
-              </li>
-
-              <li>
-                <a
-                  href="mailto:support@murgan.com"
-                  className="relative text-gray-600 hover:text-black text-sm flex items-center after:absolute after:left-7 after:-bottom-1 after:h-[1px] after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-[60%]"
-                >
-                  <Mail className="w-5 h-5 mr-2 text-gray-400" />
-                  support@murgan.com
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="tel:+919876543210"
-                  className="relative text-gray-600 hover:text-black text-sm flex items-center after:absolute after:left-7 after:-bottom-1 after:h-[1px] after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-[60%]"
-                >
-                  <Phone className="w-5 h-5 mr-2 text-gray-400" />
-                  +91 98765 43210
-                </a>
-              </li>
-
-            </ul>
+                <ul className="space-y-3">
+                  {group.links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="text-[13px] leading-6 text-neutral-600 transition-colors duration-200 hover:text-black sm:text-sm"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
-
         </div>
 
-        {/* BOTTOM COPYRIGHT */}
-        <div className="mt-12 pt-8 border-t border-gray-100 text-center">
-          <p className="text-gray-600 text-sm">
-            © {currentYear} MURGAN. All rights reserved. | Crafted with care. Designed for you.
+        {/* Bottom bar */}
+        <div className="flex flex-col gap-3 border-t border-neutral-200 py-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+          <p className="text-xs leading-5 text-neutral-500">
+            © {currentYear} MURGAN. All rights reserved.
+          </p>
+
+          <p className="text-xs leading-5 text-neutral-500">
+            Crafted with care. Designed for you.
           </p>
         </div>
-
       </div>
     </footer>
   );
