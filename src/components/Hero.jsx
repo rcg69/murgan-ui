@@ -22,7 +22,7 @@ export default function Hero() {
       {/* FLOWING TEXT */}
       <div className="hero-marquee-wrapper">
         <div className="hero-marquee-text">
-          Elegant design crafted for modern living
+         Timeless elegance woven into every saree.
         </div>
       </div>
 
